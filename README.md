@@ -1,1 +1,2 @@
-# love-jesus-A-Journaling-and-Community-Web-App
+# Love, Jesus
+## A journaling and community webapp
