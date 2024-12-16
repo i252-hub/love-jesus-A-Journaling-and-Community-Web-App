@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Bars3Icon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { EnvelopeIcon } from '@heroicons/react/24/solid'
+import { Link } from "react-router-dom";
 
 
 
@@ -37,13 +38,13 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
   
     return (
         <>
-        <nav className="bg-customBrown w-full  mobile:h-12 bg" >
+        <nav className="bg-customBrown w-full  mobile:h-12 bg">
             <ul className="flex w-full justify-between items-center  text-white mobile:hidden">
-                <li className="font-belle ml-5">Love, Jesus</li>
+                <li className="font-belle ml-5"><Link to="/">Love, Jesus</Link></li>
                 <ul className="w-[50%] justify-center flex items-center gap-20 h-[3rem]">
                     <li className="font-annie" onMouseEnter={Expand}>{Journal}</li>
                     <li className="font-annie" onMouseEnter={Expand}>{Community}</li>
-                    <li className="font-annie" onMouseEnter={Expand} >{About}</li>
+                    <li className="font-annie" onMouseEnter={Expand} ><Link to="/about">{About}</Link></li>
                 </ul>
                 <li className="font-annie mr-5">{SignIn}</li>
             </ul>
@@ -51,15 +52,15 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
         {expand && (
             <div className="flex relative bottom-3 justify-center gap-[4rem] text-white" onMouseLeave={()=> setExpand(false)}>
             <ul className="flex flex-col items-center font-annie">
-                <li>Prayer</li>
-                <li>Gratitude</li>
-                <li>Journal</li>
+                <li><Link to="/prayer">Prayer</Link></li>
+                <li><Link to="/gratitude">Gratitude</Link></li>
+                <li><Link to="/truth">Truth</Link></li>
             </ul>
             <ul className="flex flex-col items-center font-annie">
-                <li>Blessings</li>
-                <li>Prayer Request</li>
-                <li>Testimonial</li>
-                <li>Discord</li>
+                <li><Link to="/blessings">Blessings</Link></li>
+                <li><Link to="/prayreq">Prayer Request</Link></li>
+                <li><Link to="/test">Testimonial</Link></li>
+                <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a></li>
             </ul>
             <ul></ul>
             </div>
