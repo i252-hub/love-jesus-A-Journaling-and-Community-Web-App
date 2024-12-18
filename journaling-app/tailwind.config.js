@@ -4,7 +4,9 @@ export default {
   theme: {
     extend: {
       colors: { customBrown: '#816F51',
-                customYellow: '#F6E3B5'
+                customYellow: '#F6E3B5',
+                inputBrown: 'hsla(38, 23%, 41%, 0.63)',
+                placeBrown: 'hsla(38, 23%, 41%, 0.77)'
        },
        fontFamily: { roboto: ['Roboto', 'sans-serif'],
                       belle: ['La Belle Aurore', 'cursive'],
@@ -12,11 +14,22 @@ export default {
           },
        screens: { 
              'mobile': {'max': '641px'},
-             'tablet': {'max': '769px', 'min': '642px'},
-             'desktop': {'min': '770px'},
+             'tablet': {'max': '1024px', 'min': '642px'},
+             'desktop': {'min': '1025px'},
           },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.text-stroke-1': {
+          '-webkit-text-stroke': '1px black',
+        },
+        '.text-stroke-2': {
+          '-webkit-text-stroke': '1px #816F51',
+        },
+      });
+    },
+  ],
 }
 
