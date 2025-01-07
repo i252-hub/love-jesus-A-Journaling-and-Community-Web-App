@@ -32,10 +32,10 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
   
     return (
         <>
-        <nav className="bg-customBrown w-full  mobile:h-12 bg">
+        <nav className="bg-customBrown w-full  mobile:h-12 bg absolute">
             <ul className="flex w-full justify-between items-center  text-white mobile:hidden">
-                <li className="font-belle ml-5"><Link to="/">Love, Jesus</Link></li>
-                <ul className="w-[50%] justify-center flex items-center gap-20 h-[3rem]">
+                <li className="font-belle ml-5 text-[2rem] relative top-1"><Link to="/">Love, Jesus</Link></li>
+                <ul className="w-[50%] justify-center flex items-center gap-20 h-[3rem] relative right-[3rem]">
                     <li className="font-annie" onMouseEnter={Expand}>{Journal}</li>
                     <li className="font-annie" onMouseEnter={Expand}>{Community}</li>
                     <li className="font-annie" onMouseEnter={Expand} ><Link to="/about">{About}</Link></li>
@@ -44,13 +44,13 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
             </ul>
 
         {expand && (
-            <div className="flex relative bottom-3 justify-center gap-[4rem] text-white" onMouseLeave={()=> setExpand(false)}>
-            <ul className="flex flex-col items-center font-annie">
+            <div className="flex relative bottom-3 justify-center gap-[4rem]  text-white" onMouseLeave={()=> setExpand(false)}>
+            <ul className="flex flex-col items-center font-annie relative right-2">
                 <li><Link to="/prayer">Prayer</Link></li>
                 <li><Link to="/gratitude">Gratitude</Link></li>
                 <li><Link to="/truth">Truth</Link></li>
             </ul>
-            <ul className="flex flex-col items-center font-annie">
+            <ul className="flex flex-col items-center font-annie relative right-2">
                 <li><Link to="/blessings">Blessings</Link></li>
                 <li><Link to="/prayreq">Prayer Request</Link></li>
                 <li><Link to="/test">Testimonial</Link></li>

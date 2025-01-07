@@ -6,6 +6,8 @@ import Blessings from "./pages/blessings";
 import PrayerReq from "./pages/prayreq";
 import Testimonial from "./pages/test";
 import About from "./pages/about";
+import Storage from "./components/Storage";
+import Pending from "./pages/pending";
 
 const routes = [
     {
@@ -40,6 +42,14 @@ const routes = [
         path: "about",
         element: <About/>
     },
+    {
+        path: "journalentry",
+        element: <Storage/>
+    },
+    {
+        path: "pending",
+        element: <Pending />
+    }
  
 
 ]

@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Fontdiner+Swanky&family=La+Belle+Aurore&family=Luckiest+Guy&display=swap');
+input:focus{
+    font-family: "La Belle Aurore", cursive !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    color: hsla(38, 23%, 41%, 0.77) !important;
+}

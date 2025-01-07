@@ -6,7 +6,9 @@ export default {
       colors: { customBrown: '#816F51',
                 customYellow: '#F6E3B5',
                 inputBrown: 'hsla(38, 23%, 41%, 0.63)',
-                placeBrown: 'hsla(38, 23%, 41%, 0.77)'
+                placeBrown: 'hsla(38, 23%, 41%, 0.77)',
+                textBrownish: '#2A2424',
+                textBlackish: '#332B2B'
        },
        fontFamily: { roboto: ['Roboto', 'sans-serif'],
                       belle: ['La Belle Aurore', 'cursive'],
