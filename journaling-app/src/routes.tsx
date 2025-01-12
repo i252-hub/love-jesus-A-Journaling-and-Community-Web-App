@@ -1,13 +1,13 @@
 import Home from "./pages/home";
 import GratitudeJournal from "./pages/gratitudejournal";
-import PrayerJournal from "./pages/prayerjournal";
+import PrayerJournalIntro from "./pages/prayerjournalintro";
 import TruthJournal from "./pages/truthjournal";
 import Blessings from "./pages/blessings";
 import PrayerReq from "./pages/prayreq";
 import Testimonial from "./pages/test";
 import About from "./pages/about";
 import Storage from "./components/Storage";
-import Pending from "./pages/pending";
+import PrayerJournal from "./pages/prayerjournal";
 
 const routes = [
     {
@@ -16,7 +16,7 @@ const routes = [
     },
     {
         path: "prayer",
-        element: <PrayerJournal/>
+        element: <PrayerJournalIntro/>
     },
     {
         path: "truth",
@@ -47,8 +47,8 @@ const routes = [
         element: <Storage/>
     },
     {
-        path: "pending",
-        element: <Pending />
+        path: "prayerjournal",
+        element: <PrayerJournal />
     }
  
 

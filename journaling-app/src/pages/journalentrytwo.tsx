@@ -10,21 +10,18 @@ type Entry = {
     date: string
 };
 
-const JournalEntry = ({onSave}: { onSave:  (entry: Entry) => void }) => {
+const JournalEntryTwo = ({onSave}: { onSave:  (entry: Entry) => void }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const existingEntry = location.state?.entry as Entry | undefined;
 
     const [inputValue, setInputValue] = useState(existingEntry?.title || '');
     const [textareaValue, setTextAreaValue] = useState( existingEntry?.description || '');
-    const [status, setStatus] = useState(existingEntry?.status || 'Pending');
 
 
     const ChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
     const TextAreaChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTextAreaValue(e.target.value);
-    const ChangeStatus = () => {
-        setStatus(prevStatus => prevStatus === 'Pending' ? 'Answered' : 'Pending');
-    }
+   
 
     const isEditMode = !!existingEntry;
 
@@ -53,12 +50,11 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry) => void }) => {
                 updatedEntries.push(entry);
               }
               onSave(entry);
-              navigate("/prayerjournal", { state: { entries: updatedEntries } });
+              navigate("/pending", { state: { entries: updatedEntries } });
           
             if (!isEditMode) {
             setInputValue('')
             setTextAreaValue('')
-            setStatus('Pending')
             }
          }
 
@@ -94,9 +90,7 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry) => void }) => {
           <span className={`text-[3rem] z-10 font-annie text-textBlackish absolute peer-focus:hidden" ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
     </div>
          
-          <button 
-          className="pt-1 pb-1 pl-7 pr-7 bg-customBrown text-white rounded-2xl font-annie text-[1rem]"
-          onClick={ChangeStatus}>{status}</button>
+       
           <textarea
           className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
@@ -113,4 +107,4 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry) => void }) => {
     )
 }
 
-export default JournalEntry;
+export default JournalEntryTwo;

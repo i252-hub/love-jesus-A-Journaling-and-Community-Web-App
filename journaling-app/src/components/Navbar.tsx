@@ -32,7 +32,7 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
   
     return (
         <>
-        <nav className="bg-customBrown w-full  mobile:h-12 bg absolute">
+        <nav className="bg-customBrown w-full  mobile:h-12 bg absolute z-50">
             <ul className="flex w-full justify-between items-center  text-white mobile:hidden">
                 <li className="font-belle ml-5 text-[2rem] relative top-1"><Link to="/">Love, Jesus</Link></li>
                 <ul className="w-[50%] justify-center flex items-center gap-20 h-[3rem] relative right-[3rem]">
