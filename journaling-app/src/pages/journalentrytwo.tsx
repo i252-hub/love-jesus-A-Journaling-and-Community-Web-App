@@ -1,19 +1,21 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 
-type Entry = {
+type EntryTwo = {
     title: string;
     description: string;
-    status: string;
-    date: string
+    date: string;
+    id: string;
+
 };
 
-const JournalEntryTwo = ({onSave}: { onSave:  (entry: Entry) => void }) => {
+const JournalEntryTwo = ({onSave}: { onSave:  (entry: EntryTwo, isEditMode: boolean) => void }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const existingEntry = location.state?.entry as Entry | undefined;
+    const existingEntry = location.state?.entry as EntryTwo | undefined;
 
     const [inputValue, setInputValue] = useState(existingEntry?.title || '');
     const [textareaValue, setTextAreaValue] = useState( existingEntry?.description || '');
@@ -30,15 +32,18 @@ const JournalEntryTwo = ({onSave}: { onSave:  (entry: Entry) => void }) => {
         month: "long"})}  ${current.getDate()},
       ${current.getFullYear()}`
 
+       const generateUniqueId = (): string => {
+              return uuidv4(); 
+            };
       
     const HandleSave = () => {
         
         if(inputValue.trim() && textareaValue.trim()){
-            const entry: Entry = {
+            const entry: EntryTwo = {
                 title: inputValue,
                 description: textareaValue,
-                status,
-                date: existingEntry?.date || FormattedDate,      
+                date: existingEntry?.date || FormattedDate,  
+                id: existingEntry?.id || generateUniqueId(),      
                 };
               const updatedEntries = [...(location.state?.entries || []), entry];
               if (isEditMode) {
@@ -49,8 +54,8 @@ const JournalEntryTwo = ({onSave}: { onSave:  (entry: Entry) => void }) => {
               } else {
                 updatedEntries.push(entry);
               }
-              onSave(entry);
-              navigate("/pending", { state: { entries: updatedEntries } });
+              onSave(entry, isEditMode);
+              navigate("/gratitude", { state: { entries: updatedEntries } });
           
             if (!isEditMode) {
             setInputValue('')
@@ -95,7 +100,7 @@ const JournalEntryTwo = ({onSave}: { onSave:  (entry: Entry) => void }) => {
           className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
           onChange={TextAreaChangeValue}
-          placeholder= 'It is time to seek the Lord :)'
+          placeholder= 'this is journalentrytwo :)'
           />
         </div>
 </div>

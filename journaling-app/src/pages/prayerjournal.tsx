@@ -1,7 +1,8 @@
 import Navbar from "../components/Navbar"
 import { useEffect, useState} from "react";
 import Icon from '@mdi/react';
-import { mdiMagnify, mdiPlus } from '@mdi/js';
+import { mdiMagnify} from '@mdi/js';
+import { PlusCircleIcon} from '@heroicons/react/24/solid';
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -21,8 +22,8 @@ export default function PrayerJournal(){
     const [filteredEntries, setFilteredEntries] = useState<Entry[]>([]);
     const [stats, setStats] = useState("Pending");
 
-    const handleEditEntry = (entry: Entry) => {
-        navigate("/journalentry", { state: { entry } });
+    const handleEditEntry = (entry: Entry, index: number) => {
+        navigate("/journalentry", { state: { entry, index } });
       };
 
     useEffect(() => {
@@ -66,6 +67,9 @@ export default function PrayerJournal(){
         setStats((prev)=> (prev == "Pending" ? "Answered" : "Pending"));
       }
 
+   
+      
+
       const entriesToDisplay = search ? filteredEntries : filteredEntries.slice(0, 4);
 
        return (
@@ -96,11 +100,10 @@ export default function PrayerJournal(){
                   </div>
                   <div className="flex gap-3">
                     <Link to="/journalentry">
-                    <div className="h-7 w-7 bg-customBrown rounded-2xl flex justify-center items-center">
-                    <Icon path={mdiPlus} size={1} color="white"/>
-
-                    </div>
-                    </Link>
+                   
+        <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
+        </Link>
+                   
                     <button 
                     onClick={ChangeStat}
                     className="mr-8 bg-customBrown pr-8 pl-8 pt-[2px] pb-[2px] text-white font-annie">
@@ -111,9 +114,10 @@ export default function PrayerJournal(){
               </div>
              
               <div  className="relative top-[3rem] h-full bg-customYellow">
-              {entriesToDisplay.map((entry, index) => (
+              {entriesToDisplay.length > 0 ? (
+              entriesToDisplay.map((entry, index) => (
                 <div key={index} className="bg-customYellow h-[8em]"
-                onClick={()=> handleEditEntry(entry)}>
+                onClick={()=> handleEditEntry(entry, index)}>
                   <div className="ml-5">
                     <h1 className="text-[2rem] font-annie text-customBrown leading-8">{entry.title}</h1>
                     <h2 className="text-customBrown font-annie text-[1.2rem]">{entry.date}</h2>
@@ -121,7 +125,12 @@ export default function PrayerJournal(){
                     <p className="font-annie text-customBrown">{entry.description}</p>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full relative top-[8em]">
+              <h1 className="text-[3em] font-annie text-textBrownish">Prayer is your conversation with God</h1>
+              </div>
+            )}
              </div>
               </div>
          

@@ -1,6 +1,5 @@
 import Home from "./pages/home";
 import GratitudeJournal from "./pages/gratitudejournal";
-import PrayerJournalIntro from "./pages/prayerjournalintro";
 import TruthJournal from "./pages/truthjournal";
 import Blessings from "./pages/blessings";
 import PrayerReq from "./pages/prayreq";
@@ -16,7 +15,7 @@ const routes = [
     },
     {
         path: "prayer",
-        element: <PrayerJournalIntro/>
+        element: <PrayerJournal />
     },
     {
         path: "truth",
@@ -47,9 +46,10 @@ const routes = [
         element: <Storage/>
     },
     {
-        path: "prayerjournal",
-        element: <PrayerJournal />
-    }
+        path: "journalentrytwo",
+        element: <Storage/>
+    },
+   
  
 
 ]
