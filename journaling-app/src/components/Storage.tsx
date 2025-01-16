@@ -1,7 +1,8 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect, useCallback} from "react";
 import JournalEntry from "../pages/journalentry";
 import JournalEntryTwo from "../pages/journalentrytwo";
 import { useNavigate, useLocation } from "react-router-dom";
+import prompts from "../promptsetone.json";
 
 interface Entry {
     id: string | undefined;
@@ -16,24 +17,64 @@ interface Entry {
   
   interface JournalEntryTwo extends Entry {
     date: string;
+    dailyPrompt?: string;
   }
 
 
 const Storage = () => {
 const [entries, setEntries] = useState<JournalEntry[]>([]);
 const [entriesTwo, setEntriesTwo] = useState<JournalEntryTwo[]>([]);
+const [dailyPrompt, setDailyPrompt] = useState<string>("");
+
 const navigate = useNavigate();
 const location = useLocation();
 const [isEntrySaved, setIsEntrySaved] = useState(false);
 
+
 const localStorageKey =
 location.pathname === "/journalentrytwo" ? "journalEntriesTwo" : "journalEntries";
+
+const hash = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  };
+
+  const generateDailyPrompt = useCallback(() => {
+    const currentDate = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date())
+    const storedDate = localStorage.getItem("lastPromptDate");
+
+    if (storedDate !== currentDate) {
+      const hashValue = hash(currentDate);
+      const randomIndex = hashValue % prompts.length;
+      const prompt = prompts[randomIndex];
+
+      localStorage.setItem("dailyPrompt", prompt);
+      localStorage.setItem("lastPromptDate", currentDate);
+      return prompt;
+    }
+    return localStorage.getItem("dailyPrompt") || "";
+  }, []);
+
+  useEffect(() => {
+    const dailyPromptForToday = generateDailyPrompt();
+    setDailyPrompt(dailyPromptForToday);
+  }, [generateDailyPrompt]);
 
 const saveEntryCommon = <T extends Entry>(
     entry: T,
     setEntriesCallback: React.Dispatch<React.SetStateAction<T[]>>,
     isEditMode: boolean
   ) => {
+const dailyPromptForDate = generateDailyPrompt();
 const entryWithDate = {
   ...entry,
   date: new Intl.DateTimeFormat("en-US", {
@@ -42,6 +83,7 @@ const entryWithDate = {
     day: "numeric",
   }).format(new Date()),
   id: isEditMode ? entry.id : Date.now().toString(),
+  dailyPrompt: dailyPromptForDate,
 };
 console.log("saveEntry invoked:", entryWithDate);
 setIsEntrySaved(true);
@@ -93,6 +135,7 @@ if (savedEntries) {
             }).format(new Date(entry.date))
         : new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(new Date()),
         id: entry.id || `${Date.now()}-${index}`,
+
     }));
     if (location.pathname === "/journalentrytwo") {
         setEntriesTwo(parsedEntries);
