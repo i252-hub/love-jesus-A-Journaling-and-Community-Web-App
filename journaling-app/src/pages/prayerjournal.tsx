@@ -82,7 +82,6 @@ export default function PrayerJournal(){
         SignIn = 'Sign-in' />
 
 <div>
-        <div className="h-full bg-customYellow"></div>
         <div className="h-full">
          
             <div  className="bg-customYellow">
