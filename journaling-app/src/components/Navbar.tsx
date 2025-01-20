@@ -54,7 +54,6 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
                 <li><Link to="/blessings">Blessings</Link></li>
                 <li><Link to="/prayreq">Prayer Request</Link></li>
                 <li><Link to="/test">Testimonial</Link></li>
-                <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer">Discord</a></li>
             </ul>
             <ul></ul>
             </div>
