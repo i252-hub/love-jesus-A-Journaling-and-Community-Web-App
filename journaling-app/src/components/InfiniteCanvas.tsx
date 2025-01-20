@@ -1,9 +1,20 @@
 import { useRef, useEffect, useState } from "react";
-import TruthJournal from "../pages/truthjournal";
 
-const InfiniteCanvas = () => {
-    const canvasRef = useRef(null);
-    const [context, setContext] = useState(null);
+interface InfiniteCanvasProps {
+    onMouseDown?: (e: React.MouseEvent) => void;
+    onMouseMove?: (e: React.MouseEvent) => void;
+    onMouseUp?: (e: React.MouseEvent) => void;
+    onWheel?: (e: React.WheelEvent) => void;
+  }
+  
+  const InfiniteCanvas: React.FC<InfiniteCanvasProps> = ({
+    onMouseDown,
+    onMouseMove,
+    onMouseUp,
+    onWheel
+  }) => {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
 
     const [offsetX, setOffsetX] = useState(0);
     const [offsetY, setOffsetY] = useState(0);
@@ -23,7 +34,7 @@ const InfiniteCanvas = () => {
       }, []);
 
       useEffect(() => {
-        if (context) {
+        if (context && canvasRef.current) {
           context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     
           context.save();
@@ -37,45 +48,64 @@ const InfiniteCanvas = () => {
       }, [context, offsetX, offsetY, scale]);
 
 
-      const drawGrid = (ctx) => {
-        const gridSize = 50;
-        ctx.strokeStyle = "#ddd";
+      const drawGrid = (ctx:  CanvasRenderingContext2D) => {
+        const gridSize = 20;
+        ctx.strokeStyle = "#816F51";
         ctx.lineWidth = 0.5;
+        const dotSize = 1;  
+        const dotSpacing = 5;
+        const dotRadius = 2;
+        ctx.fillStyle = "rgba(129, 111, 81, 0.18)";
+
+        for (let x = -2000; x < 2000; x += gridSize) {
+            for (let y = -2000; y < 2000; y += gridSize) {
+              ctx.beginPath();
+              ctx.arc(x, y, dotRadius, 0, Math.PI * 2);  
+              ctx.fill();  
+          }
+        }
     
+        ctx.setLineDash([dotSize, dotSpacing]);
         for (let x = -2000; x < 2000; x += gridSize) {
           ctx.beginPath();
           ctx.moveTo(x, -2000);
           ctx.lineTo(x, 2000);
-          ctx.stroke();
         }
         for (let y = -2000; y < 2000; y += gridSize) {
           ctx.beginPath();
           ctx.moveTo(-2000, y);
           ctx.lineTo(2000, y);
-          ctx.stroke();
         }
+        ctx.setLineDash([]);
       };
 
-      const handleMouseDown = (e) => {
+      const handleMouseDown = (e: React.MouseEvent) => {
         setIsPanning(true);
         setStartX(e.clientX - offsetX);
         setStartY(e.clientY - offsetY);
+        if (onMouseDown) onMouseDown(e);
+
       };
 
-      const handleMouseMove = (e) => {
+      const handleMouseMove = (e: React.MouseEvent) => {
         if (isPanning) {
           setOffsetX(e.clientX - startX);
           setOffsetY(e.clientY - startY);
+          if (onMouseMove) onMouseMove(e);
+
         }
       };
 
-      const handleMouseUp = () => {
+      const handleMouseUp = (e: React.MouseEvent) => {
         setIsPanning(false);
+        if (onMouseUp) onMouseUp(e);
+
       };
 
 
-      const handleWheel = (e) => {
+      const handleWheel = (e: React.WheelEvent) => {
         e.preventDefault();
+        if (canvasRef.current) {
         const zoomFactor = 1.1;
         const deltaScale = e.deltaY < 0 ? zoomFactor : 1 / zoomFactor;
     
@@ -91,12 +121,19 @@ const InfiniteCanvas = () => {
     
         setOffsetX(newOffsetX);
         setOffsetY(newOffsetY);
+        if (onWheel) onWheel(e);
+
+        }
       };
 
       return(
-        <TruthJournal />
-        <>
-        </>
+        <canvas
+        ref={canvasRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onWheel={handleWheel}
+    />
       )
 }
 
