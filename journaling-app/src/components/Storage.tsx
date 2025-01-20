@@ -17,7 +17,7 @@ interface Entry {
   
   interface JournalEntryTwo extends Entry {
     date: string;
-    dailyPrompt?: string;
+    dailyPrompt: string;
   }
 
 
@@ -178,6 +178,7 @@ return(
     <div>
   {location.pathname === "/journalentrytwo" ? (
         <JournalEntryTwo
+        dailyPrompt={dailyPrompt}
         onSave={(entry:JournalEntryTwo, isEditMode: boolean) =>
           saveEntryCommon(entry, setEntriesTwo, isEditMode)
         }
