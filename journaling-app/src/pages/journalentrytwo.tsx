@@ -1,19 +1,23 @@
 import React from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
-import prompts from "../promptsetone.json";
 
 type EntryTwo = {
     title: string;
     description: string;
     date: string;
     id: string;
-    dailyPrompt?: string;
+    dailyPrompt: string;
 
 };
 
-const JournalEntryTwo = ({onSave}: { onSave:  (entry: EntryTwo, isEditMode: boolean) => void }) => {
+type JournalEntryTwoProps = {
+  dailyPrompt: string;
+  onSave: (entry: EntryTwo, isEditMode: boolean) => void;
+}
+
+const JournalEntryTwo: React.FC<JournalEntryTwoProps> = ({ dailyPrompt, onSave }) => {
     
   const navigate = useNavigate();
     const location = useLocation();
@@ -21,7 +25,6 @@ const JournalEntryTwo = ({onSave}: { onSave:  (entry: EntryTwo, isEditMode: bool
 
     const [inputValue, setInputValue] = useState(existingEntry?.title || '');
     const [textareaValue, setTextAreaValue] = useState( existingEntry?.description || '');
-    const [dailyPrompt, setDailyPrompt] = useState<string>('');
 
 
     const ChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
@@ -40,55 +43,22 @@ const JournalEntryTwo = ({onSave}: { onSave:  (entry: EntryTwo, isEditMode: bool
             };
       
   
-    const hash = (str: string) => {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-          const char = str.charCodeAt(i);
-          hash = (hash << 5) - hash + char;
-          hash |= 0; 
-      }
-      return Math.abs(hash);
-  };
+  
 
-  const DailyPrompt = useCallback(() => {
-    const currentDate = new Date().toISOString().split('T')[0];
-        const storedDate = localStorage.getItem("lastPromptDate");
-        console.log("Current Date:", currentDate);
-        console.log("Stored Date:", storedDate);
-    if (storedDate !== currentDate) {
-      const hashValue = hash(currentDate); 
-      const randomIndex = hashValue % prompts.length; 
-      const dailyPrompt = prompts[randomIndex];
 
-     
-      localStorage.setItem("dailyPrompt", dailyPrompt);
-      localStorage.setItem("lastPromptDate", currentDate);
-
-      return dailyPrompt;
-    }
-    return localStorage.getItem("dailyPrompt") || "";
-    
-
-  }, []);
-
-  useEffect(() => {
-    setDailyPrompt(DailyPrompt());
-}, [DailyPrompt]);
 
 const HandleSave = () => {
         
   if(inputValue.trim() && textareaValue.trim()){
-    const dailyPrompt = DailyPrompt();
 
       const entry: EntryTwo = {
           title: inputValue,
           description: textareaValue,
           date: existingEntry?.date || FormattedDate,  
           id: existingEntry?.id || generateUniqueId(),    
-          dailyPrompt: dailyPrompt,  
+          dailyPrompt: existingEntry?.dailyPrompt || "Default Daily Prompt",
           };
 
-          entry['dailyPrompt'] = dailyPrompt;
         const updatedEntries = [...(location.state?.entries || []), entry];
         if (isEditMode) {
           const entryIndex = updatedEntries.findIndex(
@@ -113,7 +83,6 @@ const HandleSave = () => {
 }
 
 
-console.log("Generated Prompt:", dailyPrompt);
 
     return(
         <>
@@ -148,7 +117,6 @@ unded-2xl "></div>
     </div>
          
        <div className="w-full p-3 bg-customBrown text-white font-[800] text-[14px] font-annie justify-center items-center rounded-2xl">
-       <p>Daily Prompt</p>
        <p>{dailyPrompt}</p>
 
        </div>
