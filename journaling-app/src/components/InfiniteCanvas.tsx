@@ -31,7 +31,7 @@ interface InfiniteCanvasProps {
     const [startY, setStartY] = useState(0);
 
     const drawGrid = useCallback((ctx: CanvasRenderingContext2D) => {
-        const gridSize = 20;
+        const gridSize = 10;
         ctx.strokeStyle = "#816F51";
         ctx.lineWidth = 0.5;
         const dotSize = 1;  
@@ -41,10 +41,11 @@ interface InfiniteCanvasProps {
 
         const gridScaleFactor = Math.max(1, scale);
 
-        const startX = Math.floor((-offsetX / scale) / gridSize) * gridSize;
-        const endX = Math.ceil((width - offsetX) / scale / gridSize) * gridSize;
-        const startY = Math.floor((-offsetY / scale) / gridSize) * gridSize;
-        const endY = Math.ceil((height - offsetY) / scale / gridSize) * gridSize;
+        const startX = Math.floor((-offsetX) / gridSize) * gridSize;
+const endX = Math.ceil((width - offsetX) / gridSize) * gridSize;
+const startY = Math.floor((-offsetY) / gridSize) * gridSize;
+const endY = Math.ceil((height - offsetY) / gridSize) * gridSize;
+
 
         for (let x = startX; x < endX; x += gridSize) {
             for (let y = startY; y < endY; y += gridSize) {
@@ -55,19 +56,7 @@ interface InfiniteCanvasProps {
           }
     
           ctx.setLineDash([dotSize, dotSpacing]);
-          for (let x = startX; x < endX; x += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, startY);
-            ctx.lineTo(x, endY);
-            ctx.stroke();
-          }
-          for (let y = startY; y < endY; y += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(startX, y);
-            ctx.lineTo(endX, y);
-            ctx.stroke();
-          }
-          ctx.setLineDash([]);
+         
         },
         [offsetX, offsetY, scale, width, height]
     );
@@ -153,8 +142,8 @@ interface InfiniteCanvasProps {
     
         setScale((prevScale) => {
             const newScale = prevScale * deltaScale;
-            return Math.max(0.1, Math.min(newScale, 5)); 
-          });    
+            return Math.max(1, Math.min(newScale, 2));
+                  });    
         const mouseX = e.clientX - canvasRef.current.offsetLeft;
         const mouseY = e.clientY - canvasRef.current.offsetTop;
     
@@ -190,8 +179,8 @@ interface InfiniteCanvasProps {
         onWheel={handleWheel}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        style={{ width: "100%", height: "100%" }}
-
+        width={width}
+        height={height}
     />
       )
 }
