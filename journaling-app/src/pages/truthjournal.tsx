@@ -9,13 +9,15 @@ type IconData = {
   type: string; 
   x: number;
   y: number;
+  text: string;
+  showInput: boolean;
+  isLabel?: boolean;
 };
 
 export default function TruthJournal(){
   const [icons, setIcons] = useState<IconData[]>([
-    { id: "note", type: "note", x: 50, y: 12 },
-    { id: "delicious", type: "delicious", x: 110, y: 6 },
-    { id: "trash", type: "trash", x: 170, y: 14 },
+    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: true },
+    { id: "delicious", type: "delicious", x: 110, y: 6, text: "", showInput: true},
   ]);
 
 
@@ -57,9 +59,28 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
       type: imageType,
       x: mouseX,
       y: mouseY,
+      text: "", 
+      showInput: imageType === "note",
+      isLabel: imageType === "delicious",
     };
     setIcons((prevIcons) => [...prevIcons, newIcon]);
   }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    setIcons((prevIcons) =>
+      prevIcons.map((icon) =>
+        icon.id === id ? { ...icon, text: e.target.value } : icon
+      )
+    );
+  };
+
+  const handleBlur = (id: string) => {
+    setIcons((prevIcons) =>
+      prevIcons.map((icon) =>
+        icon.id === id ? { ...icon, showInput: false } : icon
+      )
+    );
+  };
 
 }
 
@@ -81,10 +102,10 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
 
 
 
-         <div  className="bg-customYellow relative top-[3rem] h-[100vh] w-full" >
+         <div  className="bg-customYellow relative top-[3rem] w-full" >
          <InfiniteCanvas
-                        width={800}
-                        height={1000}
+                        width={window.innerWidth}
+                        height={window.innerHeight}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
                         onMouseUp={handleMouseUp}
@@ -97,30 +118,62 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
          
          {icons.map((icon) => (
           <div className="w-[15%] flex items-center justify-center gap-2 object-contain ">
+                   
+                   {icon.showInput ? (
+                    <input
+                      type="text"
+                      value={icon.text}
+                      onChange={(e) => handleInputChange(e, icon.id)}
+                      onBlur={() => handleBlur(icon.id)}
+                      autoFocus
+                      className="absolute bottom-0 left-0 w-full text-center border-none bg-transparent"
+                      placeholder="Enter text"
+                    />
+                  ) : icon.isLabel ? (
+                    <div
+                      className="absolute bottom-0 left-0 text-sm"
+                      style={{ top: `${icon.y + 30}px`, left: `${icon.x}px` }}
+                    >
+                      <label>{icon.text || "Label"}</label>
+                    </div>
+                  ) : (
                     <img
-                      key={icon.id}
                       draggable="true"
-                      onDragStart={(e) => handleDragStart(e, icon.type)}
+                      onDragStart={(e) =>
+                        e.dataTransfer.setData("image-type", icon.type)
+                      }
                       src={
                         icon.type === "note"
                           ? "https://img.icons8.com/pastel-glyph/64/816f51/note.png"
                           : icon.type === "delicious"
                           ? "https://img.icons8.com/ios-filled/80/816f51/delicious.png"
-                          : "https://img.icons8.com/glyph-neue/64/816f51/trash.png"
+                          : ""
                       }
                       alt={icon.type}
-                      className="w-[2.5rem] h-[2.5rem]  object-contain border-box"
+                      className="w-[2.5rem] h-[2.5rem] object-contain border-box"
                       style={{
                         position: "absolute",
                         left: `${icon.x}px`,
                         top: `${icon.y}px`,
-                        width: icon.type === "note" ? "2rem" : icon.type === "delicious" ? "2.1rem" : "2.5rem", 
-                        height: icon.type === "note" ? "3rem" : icon.type === "delicious" ? "3.5rem" : "2.3rem", 
+                        width: "2rem",
+                        height: "3rem",
                       }}
                     />
+       
+          )}
+          
+                     
                              </div> 
 
                   ))}
+                  
+
+                   <img 
+                      className="absolute w-[2.5rem] right-[83.5%]"
+                      src = "https://img.icons8.com/glyph-neue/64/816f51/trash.png"/>
+
+          
+                    
          <div className="mr-3">
             <Link to="/">
             <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
