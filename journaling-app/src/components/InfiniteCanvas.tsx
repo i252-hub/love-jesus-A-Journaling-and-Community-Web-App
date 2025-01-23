@@ -37,7 +37,7 @@ interface InfiniteCanvasProps {
         const dotSize = 1;  
         const dotSpacing = 5;
         const dotRadius = 2;
-        ctx.fillStyle = "rgba(129, 111, 81, 0.30)";
+        ctx.fillStyle = "rgba(129, 111, 81, 0.10)";
 
         const gridScaleFactor = Math.max(1, scale);
 
