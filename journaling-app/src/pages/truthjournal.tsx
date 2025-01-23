@@ -3,6 +3,7 @@ import { PlusCircleIcon} from '@heroicons/react/24/solid';
 import { Link} from "react-router-dom";
 import InfiniteCanvas from "../components/InfiniteCanvas";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type IconData = {
   id: string;
@@ -12,14 +13,16 @@ type IconData = {
   text: string;
   showInput: boolean;
   isLabel?: boolean;
+  showIcon: boolean; 
 };
 
 export default function TruthJournal(){
   const [icons, setIcons] = useState<IconData[]>([
-    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: true },
-    { id: "delicious", type: "delicious", x: 110, y: 6, text: "", showInput: true},
+    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+    { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true},
   ]);
 
+  const navigate = useNavigate();
 
   const handleMouseDown = (e: React.MouseEvent) => {
     console.log("Mouse down", e);
@@ -37,10 +40,7 @@ const handleWheel = (e: React.WheelEvent) => {
     console.log("Mouse wheel", e);
 };
 
-const handleDragStart = (e: React.DragEvent<HTMLImageElement>, imageType: string) => {
-  e.dataTransfer.setData("image-type", imageType); 
-  console.log(`Drag started with type: ${imageType}`);  
-};
+
 
 const handleDragOver = (e: React.DragEvent<HTMLCanvasElement>) => {
   e.preventDefault(); 
@@ -61,31 +61,35 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
       y: mouseY,
       text: "", 
       showInput: imageType === "note",
-      isLabel: imageType === "delicious",
-    };
-    setIcons((prevIcons) => [...prevIcons, newIcon]);
+      isLabel: imageType === "delicious" ,
+      showIcon: imageType !== "note", 
+       };
+    setIcons((prevIcons) => {
+      return [...prevIcons, newIcon];
+    });
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-    setIcons((prevIcons) =>
-      prevIcons.map((icon) =>
-        icon.id === id ? { ...icon, text: e.target.value } : icon
-      )
-    );
-  };
-
-  const handleBlur = (id: string) => {
-    setIcons((prevIcons) =>
-      prevIcons.map((icon) =>
-        icon.id === id ? { ...icon, showInput: false } : icon
-      )
-    );
-  };
-
+  
 }
 
+const handleDragStart = (e: React.DragEvent<HTMLImageElement>, imageType: string) => {
+  e.dataTransfer.setData("image-type", imageType); 
+  console.log(`Drag started with type: ${imageType}`);  
+};
+
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  setIcons((prevIcons) =>
+    prevIcons.map((icon) =>
+      icon.id === id ? { ...icon, text: e.target.value } : icon
+    )
+  );
+};
 
 
+
+const NewCanvas = () => {
+  navigate("/infinitecanvas")
+}
 
 
 
@@ -117,30 +121,40 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
         <div className="w-full  h-[3em]  flex items-center justify-between pt-5 relative bottom-[40em]">
          
          {icons.map((icon) => (
-          <div className="w-[15%] flex items-center justify-center gap-2 object-contain ">
+          <div key={icon.id} className="w-[15%] flex items-center justify-center gap-2 object-contain ">
                    
                    {icon.showInput ? (
                     <input
                       type="text"
                       value={icon.text}
                       onChange={(e) => handleInputChange(e, icon.id)}
-                      onBlur={() => handleBlur(icon.id)}
                       autoFocus
-                      className="absolute bottom-0 left-0 w-full text-center border-none bg-transparent"
+                      style={{ left: `${icon.x}px`, top: `${icon.y}px` }}
+                      className="absolute font-annie pl-3 placeholder-white  text-[12px] text-white border-none bg-customBrown w-[18rem] h-[3rem]"
                       placeholder="Enter text"
                     />
-                  ) : icon.isLabel ? (
+                  ) : icon.isLabel  && (
                     <div
                       className="absolute bottom-0 left-0 text-sm"
                       style={{ top: `${icon.y + 30}px`, left: `${icon.x}px` }}
                     >
-                      <label>{icon.text || "Label"}</label>
+                     <input
+                     onClick={NewCanvas}
+                      type="text"
+                      value={icon.text}
+                      onChange={(e) => handleInputChange(e, icon.id)}
+                      autoFocus
+                      className="font-annie placeholder-customBrown text-[12px] text-center border-none text-customBrown  bg-transparent w-[5rem] relative top-3 right-[1.50rem] focus:border-none focus:outline-none"
+                      placeholder="Enter text"
+                    />
+                     
                     </div>
-                  ) : (
+                  )} 
+                  
+                   {icon.showIcon && (
                     <img
                       draggable="true"
-                      onDragStart={(e) =>
-                        e.dataTransfer.setData("image-type", icon.type)
+                      onDragStart={(e) => handleDragStart(e, icon.type)
                       }
                       src={
                         icon.type === "note"
