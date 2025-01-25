@@ -1,9 +1,8 @@
 import Navbar from "../components/Navbar"
-import { PlusCircleIcon} from '@heroicons/react/24/solid';
+import { PlusCircleIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
 import { Link} from "react-router-dom";
 import InfiniteCanvas from "../components/InfiniteCanvas";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect} from "react";
 
 type IconData = {
   id: string;
@@ -14,6 +13,7 @@ type IconData = {
   showInput: boolean;
   isLabel?: boolean;
   showIcon: boolean; 
+  dropped?: boolean;
 };
 
 export default function TruthJournal(){
@@ -22,7 +22,96 @@ export default function TruthJournal(){
     { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true},
   ]);
 
-  const navigate = useNavigate();
+  const [showCanvas, setShowCanvas] = useState(true);
+  const [canvasId, setCanvasId] = useState(1);
+  const [currentCanvasIndex, setCurrentCanvasIndex] = useState(0);
+  const [previousCanvasIds, setPreviousCanvasIds] = useState<number[]>([]);
+
+  const loadIcons = (id: number) => {
+    const savedIcons = localStorage.getItem(`icons-${id}`);
+    if (savedIcons) {
+      setIcons(JSON.parse(savedIcons));
+    } else {
+      setIcons([]); 
+    }
+  };
+
+  useEffect(() => {
+    const savedCanvasIds = localStorage.getItem("canvas-ids");
+    if (savedCanvasIds) {
+      const parsedIds = JSON.parse(savedCanvasIds);
+      setPreviousCanvasIds(parsedIds);
+      setCurrentCanvasIndex(parsedIds.length - 1);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (canvasId) {
+      loadIcons(canvasId);
+    }
+  }, [canvasId]);
+  
+  const handleCreateNewCanvas = () => {
+    setCanvasId((prevId) => {
+      const newCanvasId = prevId + 1;  
+  
+      setPreviousCanvasIds((prevCanvasIds) => {
+        const updatedCanvasIds = [...prevCanvasIds, prevId, newCanvasId];  
+        localStorage.setItem("canvas-ids", JSON.stringify(updatedCanvasIds));
+        setCurrentCanvasIndex(updatedCanvasIds.length - 1);
+  
+        const currentIcons = icons.filter(icon => !icon.dropped); 
+      
+        localStorage.setItem(`icons-${newCanvasId}`, JSON.stringify(currentIcons));
+        return updatedCanvasIds;
+      });
+  
+      return newCanvasId;  
+    });
+  
+    setShowCanvas(true);
+    
+  };
+  
+  
+
+const handleBackClick = () => {
+  if (currentCanvasIndex > 0) {
+    const previousIndex = currentCanvasIndex - 1;
+    const previousCanvasId = previousCanvasIds[previousIndex];
+
+
+    setCurrentCanvasIndex(previousIndex);
+    setCanvasId(previousCanvasId);
+
+
+    const savedIcons = localStorage.getItem(`icons-${previousCanvasId}`);
+    if (savedIcons) {
+      setIcons(JSON.parse(savedIcons));
+    } else {
+      console.warn(`No saved icons for canvas ID: ${previousCanvasId}`);
+      setIcons([]); 
+    }
+  } else {
+    console.warn("No previous canvas available.");
+  }
+};
+
+
+  useEffect(() => {
+    console.log("Canvas ID:", canvasId);
+    console.log("Current Index:", currentCanvasIndex);
+    console.log("Previous Canvas IDs:", previousCanvasIds);
+  }, [canvasId, currentCanvasIndex, previousCanvasIds]);
+  
+
+
+
+  
+
+
+  
+  
 
   const handleMouseDown = (e: React.MouseEvent) => {
     console.log("Mouse down", e);
@@ -63,10 +152,13 @@ const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
       showInput: imageType === "note",
       isLabel: imageType === "delicious" ,
       showIcon: imageType !== "note", 
+      dropped: true
        };
-    setIcons((prevIcons) => {
-      return [...prevIcons, newIcon];
-    });
+   
+       const updatedIcons = [...icons, newIcon];
+    setIcons(updatedIcons);
+    localStorage.setItem(`icons-${canvasId}`, JSON.stringify(updatedIcons));
+
   }
 
   
@@ -87,10 +179,15 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) =
 
 
 
-const NewCanvas = () => {
-  navigate("/infinitecanvas")
-}
 
+console.log(showCanvas);
+
+useEffect(() => {
+  const savedIcons = localStorage.getItem("icons");
+  if (savedIcons) {
+    setIcons(JSON.parse(savedIcons));
+  }
+}, []);
 
 
     return (
@@ -107,16 +204,23 @@ const NewCanvas = () => {
 
 
          <div  className="bg-customYellow relative top-[3rem] w-full" >
-         <InfiniteCanvas
-                        width={window.innerWidth}
-                        height={window.innerHeight}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                        onWheel={handleWheel}
-                        onDragOver={handleDragOver}
-                        onDrop={handleDrop}
-                    />
+
+        {showCanvas &&
+        (
+
+              <InfiniteCanvas
+              width={window.innerWidth}
+              height={window.innerHeight}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onWheel={handleWheel}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+/>
+        )}
+        
+       
         
         <div className="w-full  h-[3em]  flex items-center justify-between pt-5 relative bottom-[40em]">
          
@@ -139,7 +243,6 @@ const NewCanvas = () => {
                       style={{ top: `${icon.y + 30}px`, left: `${icon.x}px` }}
                     >
                      <input
-                     onClick={NewCanvas}
                       type="text"
                       value={icon.text}
                       onChange={(e) => handleInputChange(e, icon.id)}
@@ -153,6 +256,7 @@ const NewCanvas = () => {
                   
                    {icon.showIcon && (
                     <img
+                    onClick={handleCreateNewCanvas}
                       draggable="true"
                       onDragStart={(e) => handleDragStart(e, icon.type)
                       }
@@ -188,10 +292,13 @@ const NewCanvas = () => {
 
           
                     
-         <div className="mr-3">
+         <div className="mr-3 flex gap-3">
+         <ArrowUturnLeftIcon onClick={handleBackClick} className="w-8 h-8 fill-customBrown"/>
             <Link to="/">
             <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
-            </Link></div>
+            </Link>
+           
+            </div>
             </div>
             
             {/*

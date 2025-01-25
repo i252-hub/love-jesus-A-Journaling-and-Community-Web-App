@@ -7,6 +7,7 @@ import Testimonial from "./pages/test";
 import About from "./pages/about";
 import Storage from "./components/Storage";
 import PrayerJournal from "./pages/prayerjournal";
+import InfiniteCanvas from "./components/InfiniteCanvas";
 
 const routes = [
     {
@@ -49,6 +50,10 @@ const routes = [
         path: "journalentrytwo",
         element: <Storage/>
     },
+    {
+        path: "infinitecanvas",
+        element: <InfiniteCanvas width={window.innerWidth} height={window.innerHeight}/>
+    }
    
  
 

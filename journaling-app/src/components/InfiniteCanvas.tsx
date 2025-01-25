@@ -5,8 +5,8 @@ interface InfiniteCanvasProps {
     onMouseMove?: (e: React.MouseEvent) => void;
     onMouseUp?: (e: React.MouseEvent) => void;
     onWheel?: (e: React.WheelEvent) => void;
-    onDragOver: (e: React.DragEvent<HTMLCanvasElement>) => void;
-    onDrop: (e: React.DragEvent<HTMLCanvasElement>) => void;
+    onDragOver?: (e: React.DragEvent<HTMLCanvasElement>) => void;
+    onDrop?: (e: React.DragEvent<HTMLCanvasElement>) => void;
     width: number,
     height: number
   }
