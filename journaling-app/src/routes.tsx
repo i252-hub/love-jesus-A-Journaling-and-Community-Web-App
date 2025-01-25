@@ -51,6 +51,10 @@ const routes = [
         element: <Storage/>
     },
     {
+        path: "journalentrythree",
+        element: <Storage/>
+    },
+    {
         path: "infinitecanvas",
         element: <InfiniteCanvas width={window.innerWidth} height={window.innerHeight}/>
     }
