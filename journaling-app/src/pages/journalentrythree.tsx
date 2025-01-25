@@ -17,7 +17,7 @@ type JournalEntryThreeProps = {
   onSave: (entry: EntryThree, isEditMode: boolean) => void;
 }
 
-const JournalEntryThree: React.FC<JournalEntryThreeProps> = ({ dailyPrompt, onSave }) => {
+const JournalEntryThree: React.FC<JournalEntryThreeProps> = ({ onSave }) => {
     
   const navigate = useNavigate();
     const location = useLocation();
@@ -117,7 +117,6 @@ unded-2xl "></div>
     </div>
          
        <div className="w-full p-3 bg-customBrown text-white font-[800] text-[14px] font-annie justify-center items-center rounded-2xl">
-       <p>{dailyPrompt}</p>
 
        </div>
           <textarea
