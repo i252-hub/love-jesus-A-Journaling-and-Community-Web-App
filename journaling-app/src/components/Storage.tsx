@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback} from "react";
 import JournalEntry from "../pages/journalentry";
 import JournalEntryTwo from "../pages/journalentrytwo";
+import JournalEntryThree from "../pages/journalentrythree";
 import { useNavigate, useLocation } from "react-router-dom";
 import prompts from "../promptsetone.json";
 
 interface Entry {
     id: string | undefined;
-    title: string;
-    description: string;
+    title?: string;
+    description: string | string[];
   }
   
   interface JournalEntry extends Entry {
@@ -24,6 +25,7 @@ interface Entry {
 const Storage = () => {
 const [entries, setEntries] = useState<JournalEntry[]>([]);
 const [entriesTwo, setEntriesTwo] = useState<JournalEntryTwo[]>([]);
+const [entriesThree, setEntriesThree] = useState<Entry[]>([]);
 const [dailyPrompt, setDailyPrompt] = useState<string>("");
 
 const navigate = useNavigate();
@@ -31,8 +33,18 @@ const location = useLocation();
 const [isEntrySaved, setIsEntrySaved] = useState(false);
 
 
-const localStorageKey =
-location.pathname === "/journalentrytwo" ? "journalEntriesTwo" : "journalEntries";
+const localStorageKey = (() => {
+  switch (location.pathname) {
+    case "/journalentry":
+      return "journalEntries";
+    case "/journalentrytwo":
+      return "journalEntriesTwo";
+    case "/journalentrythree":
+      return "journalEntriesThree";
+    default:
+      return "journalEntries"; 
+  }
+})();
 
 const hash = (str: string) => {
     let hash = 0;
@@ -114,8 +126,11 @@ console.log("Updated entries:", updatedEntries);
 
 if (location.pathname.includes("journalentrytwo") || location.pathname.includes("entrytwo")) {
     navigate("/gratitude"); 
-  } else {
-    navigate("/prayerjournal"); 
+  } else if (location.pathname.includes("journalentry") || location.pathname.includes("entry")){
+    navigate("/prayer"); 
+  }
+  else{
+    navigate("/truth"); 
   }
 };
 
@@ -176,23 +191,33 @@ const removeDuplicateIds = () => {
 return(
    
     <div>
-  {location.pathname === "/journalentrytwo" ? (
-        <JournalEntryTwo
-        dailyPrompt={dailyPrompt}
-        onSave={(entry:JournalEntryTwo, isEditMode: boolean) =>
-          saveEntryCommon(entry, setEntriesTwo, isEditMode)
-        }
-        />
-      ) : (
-        <JournalEntry
-          onSave={(entry: JournalEntry, isEditMode: boolean) =>
-            saveEntryCommon(entry, setEntries, isEditMode)
-          }
-        />
-      )}
+   {location.pathname === "/journalentrytwo" ? (
+    <JournalEntryTwo
+      dailyPrompt={dailyPrompt}
+      onSave={(entry: JournalEntryTwo, isEditMode: boolean) =>
+        saveEntryCommon(entry, setEntriesTwo, isEditMode)
+      }
+    />
+  ) : location.pathname === "/journalentrythree" ? (
+    <JournalEntryThree
+      onSave={(entry: Entry, isEditMode: boolean) =>
+        saveEntryCommon(entry, setEntriesThree, isEditMode)
+      }
+    />
+  ) : (
+    <JournalEntry
+      onSave={(entry: JournalEntry, isEditMode: boolean) =>
+        saveEntryCommon(entry, setEntries, isEditMode)
+      }
+    />
+  )}
 
 <ul>
-{(location.pathname === "/journalentrytwo" ? entriesTwo : entries)
+{(location.pathname === "/journalentrytwo"
+          ? entriesTwo
+          : location.pathname === "/journalentrythree"
+          ? entriesThree
+          : entries)
           .filter((entry) => {
             if ("status" in entry) {
         
