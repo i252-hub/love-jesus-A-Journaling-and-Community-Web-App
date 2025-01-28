@@ -9,6 +9,8 @@ export default function PrayerReq(){
         About = 'About'
         SignIn = 'Sign-in' />
          <h1>This is Prayer Reqs Community</h1>
+
+         <div className="relative top-[5rem]">This is prayer wall</div>
         </>
     )
 }
