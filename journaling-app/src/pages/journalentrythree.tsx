@@ -4,16 +4,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
 type EntryThree = {
-    title: string;
-    description: string;
+    description: string | string[];
     date: string;
     id: string;
-    dailyPrompt: string;
 
 };
 
 type JournalEntryThreeProps = {
-  dailyPrompt: string;
   onSave: (entry: EntryThree, isEditMode: boolean) => void;
 }
 
@@ -23,11 +20,9 @@ const JournalEntryThree: React.FC<JournalEntryThreeProps> = ({ onSave }) => {
     const location = useLocation();
     const existingEntry = location.state?.entry as EntryThree | undefined;
 
-    const [inputValue, setInputValue] = useState(existingEntry?.title || '');
     const [textareaValue, setTextAreaValue] = useState( existingEntry?.description || '');
 
 
-    const ChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
     const TextAreaChangeValue = (e: React.ChangeEvent<HTMLTextAreaElement>) => setTextAreaValue(e.target.value);
    
 
@@ -49,30 +44,27 @@ const JournalEntryThree: React.FC<JournalEntryThreeProps> = ({ onSave }) => {
 
 const HandleSave = () => {
         
-  if(inputValue.trim() && textareaValue.trim()){
+  if(typeof textareaValue === "string" && textareaValue.trim()){
 
       const entry: EntryThree = {
-          title: inputValue,
-          description: textareaValue,
+          description: textareaValue.split('\n'),
           date: existingEntry?.date || FormattedDate,  
           id: existingEntry?.id || generateUniqueId(),    
-          dailyPrompt: existingEntry?.dailyPrompt || "Default Daily Prompt",
           };
 
         const updatedEntries = [...(location.state?.entries || []), entry];
         if (isEditMode) {
           const entryIndex = updatedEntries.findIndex(
-            (e) => e.title === existingEntry.title && e.date === existingEntry.date
+            (e) => e.title === existingEntry.id && e.date === existingEntry.date
           );
           if (entryIndex > -1) updatedEntries[entryIndex] = entry;
         } else {
           updatedEntries.push(entry);
         }
         onSave(entry, isEditMode);
-        navigate("/gratitude", { state: { entries: updatedEntries } });
+        navigate("/truth", { state: { entries: updatedEntries } });
     
       if (!isEditMode) {
-      setInputValue('')
       setTextAreaValue('')
       }
    }
@@ -86,7 +78,7 @@ const HandleSave = () => {
 
     return(
         <>
-        <div className="bg-customYellow h-screen ">
+        <div className="bg-customYellow h-screen  overflow-hidden">
         <nav className="w-full flex justify-between items-center absolute">
 <div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
@@ -99,37 +91,35 @@ const HandleSave = () => {
    <button className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl" onClick={HandleSave}>Save</button>
 
     </div>
-    <div className="w-8 h-8 bg-slate-300 ro    const hashValue = hash(currentDate);
-unded-2xl "></div>
 </div>
         </nav>
-<div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center ">
-<div className="flex-col w-[50%] gap-5 h-full flex justify-center items-start relative ">
-    <div className="relative flex  items-center w-full">
-    <input 
-          className="z-20 peer bg-transparent focus: outline-none w-full h-10 focus:text-[3rem] text-[3rem] font-annie focus:text-textBlackish focus:font-annie relative"
-          type="text"
-          value= {inputValue}
-          onChange={ChangeValue}
-          placeholder= ''
-          />
-          <span className={`text-[3rem] z-10 font-annie text-textBlackish absolute peer-focus:hidden" ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
-    </div>
+   
          
-       <div className="w-full p-3 bg-customBrown text-white font-[800] text-[14px] font-annie justify-center items-center rounded-2xl">
-
-       </div>
-          <textarea
-          className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
+       <div className="w-full h-full  border-t-[2px] border-t-customBrown grid grid-cols-[1fr_1fr] text-white font-[800]  font-annie  relative top-[5rem] ">
+        <div className="bg-customYellow grid-rows-2 h-full p-2">
+            <h1 className="text-customBrown flex justify-center items-center text-[3rem]">Lies</h1>
+            <textarea
+          className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish text-textBlackish focus:font-annie bg-transparent focus:outline-none"
+          />
+        </div>
+        <div className="bg-customYellow border-l-[2px] border-l-customBrown h-full p-2">
+            <h1 className="text-customBrown flex justify-center items-center text-[3rem]">Truth</h1>
+            <textarea
+          className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
           onChange={TextAreaChangeValue}
           />
         </div>
-</div>
+
+       </div>
+       
+        
+        </div>
+
 
 
         
-        </div>
+        
         </>
     )
 }
