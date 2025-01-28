@@ -1,8 +1,8 @@
 import Navbar from "../components/Navbar"
 import { PlusCircleIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
-import { Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import InfiniteCanvas from "../components/InfiniteCanvas";
-import { useState, useEffect} from "react";
+import { useState, useEffect, useMemo} from "react";
 
 type IconData = {
   id: string;
@@ -16,6 +16,11 @@ type IconData = {
   dropped?: boolean;
 };
 
+type Entry = {
+  id: string;
+  description: string[]
+}
+
 export default function TruthJournal(){
   const [icons, setIcons] = useState<IconData[]>([
     { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
@@ -26,6 +31,11 @@ export default function TruthJournal(){
   const [canvasId, setCanvasId] = useState(1);
   const [currentCanvasIndex, setCurrentCanvasIndex] = useState(0);
   const [previousCanvasIds, setPreviousCanvasIds] = useState<number[]>([]);
+  const location = useLocation();
+  const entries: Entry[] = useMemo(() => {
+    return location.state?.entries || [];
+  }, [location.state?.entries]);  
+  
 
   const loadIcons = (id: number) => {
     const savedIcons = localStorage.getItem(`icons-${id}`);
@@ -189,6 +199,52 @@ useEffect(() => {
   }
 }, []);
 
+useEffect(() => {
+  if (entries.length > 0) {
+    setIcons((prevIcons) => {
+      const updatedIcons = entries.map((entry, index) => {
+        const generateRandomPosition = () => {
+          const canvasWidth = window.innerWidth;
+          const canvasHeight = window.innerHeight;
+          return {
+            x: Math.floor(Math.random() * (canvasWidth - 100)),
+            y: Math.floor(Math.random() * (canvasHeight - 100)), 
+          };
+        };
+
+        const isOverlapping = (x: number, y: number, icons: IconData[]) => {
+          const margin = 20; 
+          return icons.some(
+            (icon) =>
+              Math.abs(icon.x - x) < margin && Math.abs(icon.y - y) < margin
+          );
+        };
+
+        let position = generateRandomPosition();
+        while (isOverlapping(position.x, position.y, prevIcons)) {
+          position = generateRandomPosition();
+        }
+
+        return {
+          id: `entry-${entry.id || index}`,
+          type: "note",
+          x: position.x,
+          y: position.y,
+          text: entry.description.join(", "),
+          showInput: true,
+          showIcon: false,
+          isLabel: false,
+          dropped: true,
+        };
+      });
+
+      return [...prevIcons, ...updatedIcons];
+    });
+  }
+}, [entries]); 
+
+
+
 
     return (
         <>
@@ -207,7 +263,6 @@ useEffect(() => {
 
         {showCanvas &&
         (
-
               <InfiniteCanvas
               width={window.innerWidth}
               height={window.innerHeight}
@@ -284,6 +339,8 @@ useEffect(() => {
                              </div> 
 
                   ))}
+
+
                   
 
                    <img 
@@ -294,24 +351,17 @@ useEffect(() => {
                     
          <div className="mr-3 flex gap-3">
          <ArrowUturnLeftIcon onClick={handleBackClick} className="w-8 h-8 fill-customBrown"/>
-            <Link to="/">
+            <Link to="/journalentrythree">
             <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
             </Link>
            
             </div>
             </div>
             
-            {/*
-                  <div className="mr-5">
-                    
-                  <Link to="/journalentrytwo">
-                   
-                   <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
-                   </Link>
-                  
-                  </div>*/}
+       
+           
                 </div>
-
+               
               
               </div>
               </div>
