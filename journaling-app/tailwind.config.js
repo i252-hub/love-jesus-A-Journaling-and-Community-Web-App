@@ -3,6 +3,9 @@ export default {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
+    
+        backgroundImage: { customGradient: 'linear-gradient(323deg, #BCA983 0%, #BCA983 21%, #BCA983 54%, #F6E3B5 77%, #816F51 100%);',
+        },
       colors: { customBrown: '#816F51',
                 customYellow: '#F6E3B5',
                 inputBrown: 'hsla(38, 23%, 41%, 0.63)',
