@@ -3,8 +3,11 @@ export default {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        'custom': '0px 13px 27px -5px rgba(50, 50, 93, 0.25), 0px 8px 16px -8px rgba(0, 0, 0, 0.3)',
+      },
     
-        backgroundImage: { customGradient: 'linear-gradient(323deg, #BCA983 0%, #BCA983 21%, #BCA983 54%, #F6E3B5 77%, #816F51 100%);',
+        backgroundImage: { customGradient: 'linear-gradient(-323deg, #BCA983 0%, #816F51 -51%, #BCA983 54%, #F6E3B5 77%, #816F51 100%);',
         },
       colors: { customBrown: '#816F51',
                 customYellow: '#F6E3B5',
@@ -32,6 +35,9 @@ export default {
         },
         '.text-stroke-2': {
           '-webkit-text-stroke': '1px #816F51',
+        },
+        '.text-stroke-3': {
+          '-webkit-text-stroke': '2px #816F51',
         },
       });
     },
