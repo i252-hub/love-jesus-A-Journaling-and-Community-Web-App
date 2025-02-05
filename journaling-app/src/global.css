@@ -12,3 +12,14 @@ html, body{
     height: 100%;
 }
 
+@layer utilities {
+    .scrollbar-hidden::-webkit-scrollbar {
+      overflow: hidden;
+      display:none;
+    }
+  }
+  
+  
+  
+  
+
