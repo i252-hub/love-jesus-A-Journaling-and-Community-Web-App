@@ -21,7 +21,6 @@ export default function Blessings(){
    function Display(e: React.ChangeEvent<HTMLTextAreaElement>){
     const {name, value} = e.target
     setCurrentNote((prev) => ({ ...prev, [name]: value }));
-
    }
 
    function Publish(){
