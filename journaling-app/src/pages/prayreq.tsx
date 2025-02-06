@@ -1,15 +1,24 @@
 import Navbar from "../components/Navbar"
 import { PlusCircleIcon} from '@heroicons/react/24/solid';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function PrayerReq(){
 
   const [addReq, setAddReq] = useState(false);
-  const [note, setNote] = useState<{text: string}[]>([]);
-  const [currentNote, setCurrentNote] = useState({ text: ""});
+  const [note, setNote] = useState<{text: string, username: string}[]>([]);
+  const [currentNote, setCurrentNote] = useState({ text: "", username: ""});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentChunk, setCurrentChunk] = useState(1);
+  const notesPerPage = 8;
+  const pagesPerChunk = 3; 
 
-
+  useEffect(()=>{
+    if (!currentNote.username) {
+      const newUserName = `User${Math.floor(Math.random() * 1000)}`;
+      setCurrentNote((prev) => ({ ...prev, username: newUserName }));
+    }
+  },[currentNote.username])
 
   function Show(){
     setAddReq(true)
@@ -17,13 +26,9 @@ export default function PrayerReq(){
 
   function Publish(){
     if (currentNote.text.trim()) {
-      setNote((prev) => {
-        if (prev.length < 8) {
-          return [...prev, currentNote]; 
-        }
-        return prev; 
-      }); 
-      setCurrentNote({ text: "" });
+      const newUserName = `User${Math.floor(Math.random() * 1000)}`;
+      setNote((prev) => [...prev, { text: currentNote.text, username: newUserName }]);
+      setCurrentNote({ text: "", username: newUserName });
       setAddReq(false);
     }
    }
@@ -31,7 +36,41 @@ export default function PrayerReq(){
    function UniqueID(e: React.ChangeEvent<HTMLTextAreaElement>){
     const {name, value} = e.target
     setCurrentNote((prev) => ({ ...prev, [name]: value }));
+
+   
    }
+
+   const totalPages = Math.ceil(note.length / notesPerPage);
+   const displayedNotes = note.slice(
+     (currentPage - 1) * notesPerPage,
+     currentPage * notesPerPage
+   );
+ 
+   function handlePageChange(newPage: number) {
+     setCurrentPage(newPage);
+   }
+
+  
+
+   const chunkStart = (currentChunk - 1) * pagesPerChunk + 1;
+   const chunkEnd = Math.min(currentChunk * pagesPerChunk, totalPages);
+
+   const pageNumbers = Array.from(
+    { length: chunkEnd - chunkStart + 1 },
+    (_, i) => chunkStart + i
+  );
+
+  function handlePreviousChunk() {
+    if (currentChunk > 1) {
+      setCurrentChunk(currentChunk - 1);
+    }
+  }
+
+  function handleNextChunk() {
+    if (chunkEnd < totalPages) {
+      setCurrentChunk(currentChunk + 1);
+    }
+  }
 
 
     return (
@@ -48,15 +87,17 @@ export default function PrayerReq(){
           <div className="w-full  text-[2rem] font-belle flex justify-center pt-8 pb-1 text-white">Daily Prayer Wall</div>
           <div className="w-[70%] grid grid-rows-8 h-[70%]">
 
-          {note.length <= 8 &&
-          note.map((notes, index) => (
+          {
+          displayedNotes.map((notes, index) => (
                 <div
                   key={index}
                   className={`grid grid-cols-2 items-center 
                     ${index % 2 === 0 ? 'bg-[#554B35] bg-opacity-50' : 'bg-[#BCA983]'}`}
                 > 
                 <div className="flex flex-col ">
-                  <div className="text-white font-belle h-full relative top-1 ml-3"> sunflocode</div>
+                  
+                  <div className="text-white font-belle h-full relative top-1 ml-3"> {notes.username}</div>
+                
                   <div className="h-full text-white font-annie ml-3">  { notes.text} </div>
                 </div>
                 <div className="flex justify-end items-center bg-transparent w-full h-full">
@@ -100,11 +141,42 @@ export default function PrayerReq(){
           </div>
           </>
            )}
-          <div className="flex justify-center w-full items-center ">
-            <p className="relative left-[3rem] text-[#2A2424] font-annie">1 2 3</p>
+          <div className="flex justify-center w-full items-center  ">
+            <div className="w-[10%] relative left-[5rem] ">
+            {currentChunk > 1 && (
+              <button
+                onClick={handlePreviousChunk}
+                className="text-customBrown font-bold px-2"
+              >
+                &lt;
+              </button>
+            )}
+            {pageNumbers.map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`mx-1 px-2 ${
+                  currentPage === pageNumber
+                    ? "text-customBrown font-bold"
+                    : "text-customBrown font-bold"
+                } font-annie`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            {chunkEnd < totalPages && (
+              <button
+                onClick={handleNextChunk}
+                className="text-customBrown font-bold px-2"
+              >
+                &gt;
+              </button>
+            )}
+            </div>
+        
             <PlusCircleIcon
               onClick={Show}
-              className="h-12 w-12 relative left-[33.5rem] fill-customBrown cursor-pointer"/>
+              className="h-12 w-12 relative left-[33.5rem] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"/>
           </div>
         </div>
         </div>
