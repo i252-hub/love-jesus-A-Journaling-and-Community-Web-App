@@ -1,6 +1,11 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar"
 import { PlusCircleIcon, EllipsisVerticalIcon,XMarkIcon} from '@heroicons/react/24/solid';
+import '../assets/crown.png';
+import '../assets/sheep.png';
+import '../assets/tree.png';
+import '../assets/whale.png';
+
 
 export default function Blessings(){
    const [addnote, setAddNote] = useState(false);
@@ -39,7 +44,13 @@ export default function Blessings(){
         About = 'About'
         SignIn = 'Sign-in' />
       
-   
+      <div className="w-full h-[3rem] bg-black relative top-[3rem]">
+        <div><img src = "crown.png"/></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
 <div className="absolute flex flex-wrap top-3">
         {published &&
             display.map((note, index) => (
