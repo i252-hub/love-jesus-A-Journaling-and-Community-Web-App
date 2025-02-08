@@ -1,26 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar"
+import StorageTwo from "../components/StorageTwo";
 import { PlusCircleIcon, EllipsisVerticalIcon,XMarkIcon} from '@heroicons/react/24/solid';
-import '../assets/crown.png';
-import '../assets/sheep.png';
-import '../assets/tree.png';
-import '../assets/whale.png';
+import crown from '../assets/crown.png';
+import sheep from '../assets/sheep.png';
+import tree from '../assets/tree.png';
+import whale from '../assets/whale.png';
 
 
 export default function Blessings(){
    const [addnote, setAddNote] = useState(false);
-   const [option, setOption] = useState(false);
+   const [editIndex, setEditIndex] = useState<number | null>(null);
+   const [option, setOption] = useState<{ [key: number]: boolean }>({});
    const [display, setDisplay] = useState<{title: string, content: string}[]>([]);
-   const [published, setPublished] = useState(false)
    const [currentNote, setCurrentNote] = useState({ title: "", content: "" });
+   const [message, setMessage] = useState(false);
+
+   useEffect(() => {
+    const storedNotes = JSON.parse(localStorage.getItem(getCurrentDate()) || "[]");
+    setDisplay(storedNotes);
+  }, []);
+
+  function getCurrentDate() {
+    return new Date().toISOString().split("T")[0]; 
+  }
 
    function AddNote(){
     setAddNote(true);
     setCurrentNote({ title: "", content: "" });
+    setEditIndex(null);
    }
 
-   function Option(){
-    setOption((prev)=> !prev);
+   function Option(index: number){
+    setOption((prev) => ({
+      ...prev,
+      [index]: !prev[index], 
+    }));
    }
 
    function Display(e: React.ChangeEvent<HTMLTextAreaElement>){
@@ -30,11 +45,36 @@ export default function Blessings(){
 
    function Publish(){
     if (currentNote.title.trim() || currentNote.content.trim()) {
-      setDisplay((prev) => [...prev, currentNote]); 
-      setAddNote(false);  
-      setPublished(true)
+      let updatedNotes;
+      if (editIndex !== null) {
+        updatedNotes = display.map((note, i) =>
+          i === editIndex ? currentNote : note
+        );
+        setEditIndex(null);
+      } else {
+        updatedNotes = [...display, currentNote];
+      }
+      setDisplay(updatedNotes);
+      setAddNote(false);
+      localStorage.setItem(getCurrentDate(), JSON.stringify(updatedNotes));
+      setMessage(true);
+    }
    }
-   }
+
+   function editNote(index: number) {
+    setCurrentNote(display[index]); 
+    setAddNote(true);
+    setEditIndex(index);
+  }
+
+  function deleteNote(index: number) {
+    const updatedNotes = display.filter((_, i) => i !== index);
+    setDisplay(updatedNotes);
+    localStorage.setItem(getCurrentDate(), JSON.stringify(updatedNotes));
+  }
+   
+
+
     return (
         <>
         <div className="bg-customGradient scrollbar-hidden bg-cover bg-no-repeat min-h-screen relative overflow-auto">
@@ -44,17 +84,27 @@ export default function Blessings(){
         About = 'About'
         SignIn = 'Sign-in' />
       
-      <div className="w-full h-[3rem] bg-black relative top-[3rem]">
-        <div><img src = "crown.png"/></div>
-        <div></div>
-        <div></div>
-        <div></div>
+      <div className="w-full h-[3rem] bg-transparent relative top-[3rem] flex items-center">
+        <div className="w-[70%] h-full">
+       
+        </div>
+        <div className="w-8 h-8 rounded-2xl bg-customBrown border-2 border-[#554B35] border-opacity-80"><img src = {crown} className="h-full w-full"/></div>
+        <div className="w-8 h-8 rounded-2xl bg-customBrown relative right-[1rem] border-2 border-[#554B35] border-opacity-80"><img src = {sheep} className="h-full w-full"/></div>
+        <div className="w-8 h-8 rounded-2xl bg-customBrown relative right-[2rem]"><img src = {tree} className="h-full w-full"/></div>
+        <div className="w-8 h-8 rounded-2xl bg-customBrown relative right-[3rem]"><img src = {whale} className="h-full w-full"/></div>
       </div>
 
-<div className="absolute flex flex-wrap top-3">
-        {published &&
+      <StorageTwo<{ title: string; content: string }> storageKey="blessings_notes" setNotes={setDisplay} />
+
+      {!message && display.length === 0 && (
+  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] flex justify-center items-center">What Blessings did you receive?</div>
+
+  )}
+<div className="absolute flex flex-wrap top-[3rem]">
+ 
+        {display.length > 0 &&
             display.map((note, index) => (
- <div key={index} className="relative  w-[20rem]  ml-5 mt-[3rem] bg-customYellow rounded-3xl shadow-custom">
+ <div key={index} className="relative  w-[20rem]  ml-[3rem] mt-[3rem] bg-customYellow rounded-3xl shadow-custom">
  <div className="w-[90%]  flex justify-between items-center relative top-6 ml-3 pb-3">
    <div className="flex gap-2 items-center justify-center ">
    <div className="bg-gray-300 h-6 w-6 rounded-full"></div>
@@ -62,7 +112,7 @@ export default function Blessings(){
 
    </div>
    <EllipsisVerticalIcon 
-   onClick={Option}
+   onClick={() => Option(index)}
    className="h-5 w-5 fill-customBrown cursor-pointer"/>
 
  </div>
@@ -79,10 +129,14 @@ export default function Blessings(){
  
    
           
-          {option && (
-            <div className="bg-[#554B35] h-[4rem] w-20 relative bottom-[12rem] left-[17.5rem] flex flex-col items-center justify-center">
-              <div className="w-[80%] flex justify-center items-center text-white font-annie border-b-[1px]  border-white cursor-pointer">Edit</div>
-              <div className="w-[80%] flex justify-center items-center text-white font-annie cursor-pointer">Delete</div>
+          {option[index] && (
+            <div className="bg-[#554B35] h-[3rem] w-[4rem] absolute bottom-[4.5rem] left-[19rem] z-50 flex flex-col items-center justify-center">
+              <div 
+              onClick={() => editNote(index)}
+              className="w-[80%] flex justify-center items-center text-white font-annie border-b-[1px]  border-white cursor-pointer">Edit</div>
+              <div 
+              onClick={() => deleteNote(index)}
+              className="w-[80%] flex justify-center items-center text-white font-annie cursor-pointer">Delete</div>
             </div>
           )}
          </div>
@@ -91,7 +145,7 @@ export default function Blessings(){
 </div>
          <div className="w-full flex justify-end items-end absolute">
          {addnote &&(
-          <div className="w-[25rem] h-[22.3rem] absolute top-[15.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5">
+          <div className="w-[25rem] h-[22.3rem] absolute top-[12.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5">
            <div className="flex justify-end">
            
            <XMarkIcon 
