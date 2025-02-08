@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar"
+import StorageTwo from "../components/StorageTwo";
 import { PlusCircleIcon} from '@heroicons/react/24/solid';
 import { useEffect, useState } from "react";
 
@@ -6,10 +7,12 @@ import { useEffect, useState } from "react";
 export default function PrayerReq(){
 
   const [addReq, setAddReq] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
   const [note, setNote] = useState<{text: string, username: string}[]>([]);
   const [currentNote, setCurrentNote] = useState({ text: "", username: ""});
   const [currentPage, setCurrentPage] = useState(1);
   const [currentChunk, setCurrentChunk] = useState(1);
+  const [message, setMessage] = useState(false);
   const notesPerPage = 8;
   const pagesPerChunk = 3; 
 
@@ -21,15 +24,36 @@ export default function PrayerReq(){
   },[currentNote.username])
 
   function Show(){
-    setAddReq(true)
+  
+      setCurrentNote({ text: "", username: "" });
+      setEditIndex(null);
+    setAddReq(true);
+  }
+
+  function editNote(index: number) {
+    setCurrentNote({...note[index]}); 
+    setAddReq(true);
+    setEditIndex(index);
   }
 
   function Publish(){
     if (currentNote.text.trim()) {
-      const newUserName = `User${Math.floor(Math.random() * 1000)}`;
-      setNote((prev) => [...prev, { text: currentNote.text, username: newUserName }]);
-      setCurrentNote({ text: "", username: newUserName });
+      if (editIndex !== null) {
+        updatePrayerNote(editIndex, { text: currentNote.text });
+        setEditIndex(null);
+      } else {
+        const newUserName = `User${Math.floor(Math.random() * 1000)}`;
+        const newNote = { text: currentNote.text, username: newUserName };
+        const updatedNotes = [...note, newNote];
+
+      setNote(updatedNotes);
+        localStorage.setItem("prayer_requests", JSON.stringify(updatedNotes));
+        setEditIndex(updatedNotes.length - 1);
+
+      }
+      setCurrentNote({ text: "", username: "" });
       setAddReq(false);
+      setMessage(true);
     }
    }
 
@@ -72,6 +96,15 @@ export default function PrayerReq(){
     }
   }
 
+  const updatePrayerNote = (index: number, newNote: { text: string }) => {
+    setNote((prev) => {
+      const updatedNotes = prev.map((note, i) => (i === index ? { ...note, ...newNote } : note));
+      localStorage.setItem("prayer_requests", JSON.stringify(updatedNotes));
+      return updatedNotes;
+    });
+  };
+  
+
 
     return (
         <>
@@ -82,6 +115,17 @@ export default function PrayerReq(){
         Community = 'Community'
         About = 'About'
         SignIn = 'Sign-in' />
+        
+        <StorageTwo<{ text: string; username: string }>
+  storageKey="prayer_requests"
+  setNotes={setNote}
+  updateNoteTwo={updatePrayerNote}
+/>
+
+         {!message && displayedNotes.length === 0 && (
+  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] flex justify-center items-center">What do you want us to pray for?</div>
+
+  )}
         <div className="relative top-[3rem] flex flex-col items-center h-full"
         > 
           <div className="w-full  text-[2rem] font-belle flex justify-center pt-8 pb-1 text-white">Daily Prayer Wall</div>
@@ -91,6 +135,7 @@ export default function PrayerReq(){
           displayedNotes.map((notes, index) => (
                 <div
                   key={index}
+                  onClick={() => index !== null && editNote(index)}
                   className={`grid grid-cols-2 items-center 
                     ${index % 2 === 0 ? 'bg-[#554B35] bg-opacity-50' : 'bg-[#BCA983]'}`}
                 > 
@@ -174,9 +219,13 @@ export default function PrayerReq(){
             )}
             </div>
         
-            <PlusCircleIcon
-              onClick={Show}
-              className="h-12 w-12 relative left-[33.5rem] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"/>
+   
+  <PlusCircleIcon
+  onClick={Show}
+    className="h-12 w-12 relative left-[33.5rem] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"
+  />
+
+
           </div>
         </div>
         </div>
