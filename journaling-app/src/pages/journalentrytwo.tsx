@@ -88,19 +88,18 @@ const HandleSave = () => {
         <>
         <div className="bg-customYellow h-screen ">
         <nav className="w-full flex justify-between items-center absolute">
-<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5">Love, Jesus</div>
+<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 tablet:text-[2rem]">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
     <div className="flex gap-3 ">
     <button 
     onClick={()=> navigate("/gratitude")}
-    className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl"
+    className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl"
     >Cancel</button>
   
-   <button className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl" onClick={HandleSave}>Save</button>
+   <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
 
     </div>
-    <div className="w-8 h-8 bg-slate-300 ro    const hashValue = hash(currentDate);
-unded-2xl "></div>
+    <div className="w-8 h-8 tablet:w-7 tablet:h-7 relative tablet:bottom-[2px] bg-slate-300 rounded-2xl"></div>
 </div>
         </nav>
 <div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center ">
@@ -113,10 +112,10 @@ unded-2xl "></div>
           onChange={ChangeValue}
           placeholder= ''
           />
-          <span className={`text-[3rem] z-10 font-annie text-textBlackish absolute peer-focus:hidden" ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
+          <span className={`text-[3rem]  z-10 font-annie text-textBlackish absolute peer-focus:hidden" ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
     </div>
          
-       <div className="w-full p-3 bg-customBrown text-white font-[800] text-[14px] font-annie justify-center items-center rounded-2xl">
+       <div className="w-full p-3 bg-customBrown text-white font-[800] text-[14px] tablet:text-[12px] font-annie justify-center items-center rounded-2xl">
        <p>{dailyPrompt}</p>
 
        </div>
