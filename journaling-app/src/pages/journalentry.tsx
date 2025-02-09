@@ -77,18 +77,18 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry, isEditMode: boolean) =
         <>
         <div className="bg-customYellow h-screen ">
         <nav className="w-full flex justify-between items-center absolute">
-<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5">Love, Jesus</div>
+<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 tablet:text-[2rem]">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
-    <div className="flex gap-3 ">
-    <button className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl">Cancel</button>
+    <div className="flex gap-3 flex-wrap ">
+    <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl">Cancel</button>
   
-   <button className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl" onClick={HandleSave}>Save</button>
+   <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
 
     </div>
-    <div className="w-8 h-8 bg-slate-300 rounded-2xl "></div>
+    <div className="w-8 h-8 tablet:w-7 tablet:h-7 relative tablet:bottom-[2px] bg-slate-300 rounded-2xl "></div>
 </div>
         </nav>
-<div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center ">
+<div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center">
 <div className="flex-col w-[50%] gap-5 h-full flex justify-center items-start relative ">
     <div className="relative flex  items-center w-full">
     <input 
@@ -102,13 +102,13 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry, isEditMode: boolean) =
     </div>
          
           <button 
-          className="pt-1 pb-1 pl-7 pr-7 bg-customBrown text-white rounded-2xl font-annie text-[1rem]"
+          className="pt-1 pb-1 pl-7 pr-7 bg-customBrown tablet:pl-5 tablet:pr-5 tablet:pt-0.5 tablet:pb-0.5 tablet:text-[14px] text-white rounded-2xl font-annie text-[1rem]"
           onClick={ChangeStatus}>{status}</button>
           <textarea
           className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
           onChange={TextAreaChangeValue}
-          placeholder= 'this is journalentry :)'
+          placeholder= 'How about telling him about your day?'
           />
         </div>
 </div>
