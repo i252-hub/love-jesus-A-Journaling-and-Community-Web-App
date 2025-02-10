@@ -123,7 +123,7 @@ export default function PrayerReq(){
 />
 
          {!message && displayedNotes.length === 0 && (
-  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] flex justify-center items-center">What do you want us to pray for?</div>
+  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] mobile:text-[2.5em] mobile:text-center flex justify-center items-center">What do you want us to pray for?</div>
 
   )}
         <div className="relative top-[3rem] flex flex-col items-center h-full"
@@ -165,7 +165,7 @@ export default function PrayerReq(){
             <>
           <div className= 'fixed inset-0 backdrop-blur-sm  bg-opacity-50 z-40'></div>
 
-          <div className="h-[60%] w-[30%] z-50   bg-customYellow  shadow-md absolute top-[10%] left-[37%] pb-2" >
+          <div className="h-[60%] w-[30%] z-50 mobile:h-screen mobile:top-0 mobile:w-full mobile:left-0  bg-customYellow  shadow-md absolute top-[10%] left-[37%] pb-2" >
           <textarea 
              className="w-full h-[90%] text-[1rem] font-annie resize-none overflow-hidden bg-transparent  focus:outline-none focus:text-customBrown text-customBrown pl-2 text-stroke-2 focus:text-stroke-2"
             maxLength={840}
@@ -174,7 +174,7 @@ export default function PrayerReq(){
              onChange={UniqueID}
              name="text"
              value={currentNote.text}></textarea>
-             <div className="flex justify-end gap-2 mr-3">
+             <div className="flex justify-end gap-2 mr-3 mobile:relative mobile:bottom-[2rem]">
              <button className="p-1 pl-5 pr-5 rounded-2xl bg-customBrown text-white font-annie"
              onClick={() => setAddReq(false)}>Cancel</button>
              <button 
@@ -222,7 +222,7 @@ export default function PrayerReq(){
    
   <PlusCircleIcon
   onClick={Show}
-    className="h-12 w-12 relative left-[33.5rem] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"
+    className="h-12 w-12 fixed left-[90%] mobile:left-[85%] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"
   />
 
 

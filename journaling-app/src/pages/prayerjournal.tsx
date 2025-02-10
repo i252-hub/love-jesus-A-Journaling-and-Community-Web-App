@@ -86,26 +86,26 @@ export default function PrayerJournal(){
          
             <div  className="bg-customYellow">
               <div className="relative top-[3rem] flex justify-center items-center h-[5em]">
-                <div className="flex justify-between w-full">
-                  <div>
+                <div className="flex justify-between items-center w-full mobile:flex-col mobile:gap-2 ">
+                  <div className="mobile:flex mobile:justify-center">
                     <input 
                     value={search}
                     onChange={handleSearchChange}
-                    className="ml-3 absolute rounded-2xl w-[10rem] pl-2 text-left caret-transparent focus:font-annie text-customBrown"
+                    className="ml-3 absolute rounded-2xl w-[10rem] mobile:w-[90%] mobile:pt-1 pl-2 text-left caret-transparent focus:font-annie text-customBrown"
                     />
-                    <div className="bg-customBrown h-6 w-7 rounded-r-2xl relative left-[9rem] flex justify-center items-center">
+                    <div className="bg-customBrown h-6 w-7 rounded-r-2xl relative left-[9rem] mobile:left-[10rem] mobile:h-7 flex justify-center items-center">
                       <Icon path={mdiMagnify} size={0.8} color="white" />
                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mr-[7rem] mobile:justify-end mobile:w-full mobile:mr-0">
                     <Link to="/journalentry">
                    
-        <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
+        <PlusCircleIcon className="w-9 h-9 tablet:w-8 tablet:h-8  fill-customBrown"/>
         </Link>
                    
                     <button 
                     onClick={ChangeStat}
-                    className="mr-8 bg-customBrown pr-8 pl-8 pt-[2px] pb-[2px] text-white font-annie">
+                    className="mr-8 tablet:ml-[3rem] bottom-[1.7rem] bg-customBrown pr-8 pl-8 pt-[2px] pb-[2px]    tablet:pr-5 tablet:pl-5 tablet:pt-0 tablet:absolute text-white font-annie">
                       {stats}
                     </button>
                   </div>
@@ -127,7 +127,7 @@ export default function PrayerJournal(){
               ))
             ) : (
               <div className="flex flex-col items-center justify-center h-full relative top-[8em]">
-              <h1 className="text-[3em] font-annie text-textBrownish">Prayer is your conversation with God</h1>
+              <h1 className="text-[3em] mobile:text-[2.3rem] mobile:text-center font-annie text-textBrownish mobile:flex mobile:justify-center mobile:items-center">Prayer is your conversation with God</h1>
               </div>
             )}
              </div>

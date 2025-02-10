@@ -85,7 +85,7 @@ export default function Blessings(){
         SignIn = 'Sign-in' />
       
       <div className="w-full h-[3rem] bg-transparent relative top-[3rem] flex items-center">
-        <div className="w-[70%] h-full">
+        <div className="w-[70%] h-full mobile:w-[45%]">
        
         </div>
         <div className="w-8 h-8 rounded-2xl bg-customBrown border-2 border-[#554B35] border-opacity-80"><img src = {crown} className="h-full w-full"/></div>
@@ -97,7 +97,9 @@ export default function Blessings(){
       <StorageTwo<{ title: string; content: string }> storageKey="blessings_notes" setNotes={setDisplay} />
 
       {!message && display.length === 0 && (
-  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] flex justify-center items-center">What Blessings did you receive?</div>
+  <div className="w-full h-[50%] absolute z-5 top-[8rem] text-customBrown font-annie text-[3em] mobile:text-[2.5rem] mobile:text-center flex justify-center items-center">
+  What Blessings did you receive?
+  </div>
 
   )}
 <div className="absolute flex flex-wrap top-[3rem]">
@@ -143,9 +145,9 @@ export default function Blessings(){
            
           ))}
 </div>
-         <div className="w-full flex justify-end items-end absolute">
+         <div className="w-full flex justify-end items-end absolute ">
          {addnote &&(
-          <div className="w-[25rem] h-[22.3rem] absolute top-[12.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5">
+          <div className="w-[25rem] h-[22.3rem] mobile:h-screen mobile:top-0 mobile:right-0 mobile:w-full   absolute top-[12.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5">
            <div className="flex justify-end">
            
            <XMarkIcon 
@@ -163,8 +165,8 @@ export default function Blessings(){
              placeholder="What's the gift?"
              onChange={Display}>What's the gift?</textarea>
                <textarea 
-             className="w-full h-[60%] text-[1rem] resize-none overflow-hidden bg-transparent focus:outline-none focus:text-customBrown font-annie text-customBrown pl-2 text-stroke-2 focus:text-stroke-2"
-            maxLength={210}
+             className="w-full h-[60%]  text-[1rem] resize-none overflow-hidden bg-transparent focus:outline-none focus:text-customBrown font-annie text-customBrown pl-2 text-stroke-2 focus:text-stroke-2"
+            maxLength={window.innerWidth <= 768 ? 900 : 210}
              rows={2}
              name="content"
              value = {currentNote.content}
@@ -177,16 +179,17 @@ export default function Blessings(){
             className="bg-customBrown text-white font-annie pl-5 pr-5 h-[2rem] mr-2 rounded-2xl">Publish</button>
 
             </div>
-           
+      
           </div>
   )}
-         
-         <PlusCircleIcon 
+               <PlusCircleIcon 
          onClick={AddNote}
-         className="h-12 w-12 fixed top-[35rem] mr-[2rem] fill-customBrown cursor-pointer"/>
+         className="h-12 w-12 fixed left-[95%] mobile:left-[85%] bottom-[1.3rem] mr-[2.3rem] fill-customBrown cursor-pointer"/>
+       
+         </div>
+       
          </div>
          
-         </div>
          
         </>
     )

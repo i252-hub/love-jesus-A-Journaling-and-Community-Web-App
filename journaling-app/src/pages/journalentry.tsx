@@ -77,9 +77,9 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry, isEditMode: boolean) =
         <>
         <div className="bg-customYellow h-screen ">
         <nav className="w-full flex justify-between items-center absolute">
-<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 tablet:text-[2rem]">Love, Jesus</div>
+<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 tablet:text-[2rem] mobile:text-[1.5rem]">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
-    <div className="flex gap-3 flex-wrap ">
+    <div className="flex gap-3 flex-wrap mobile:hidden ">
     <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl">Cancel</button>
   
    <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
@@ -89,33 +89,39 @@ const JournalEntry = ({onSave}: { onSave:  (entry: Entry, isEditMode: boolean) =
 </div>
         </nav>
 <div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center">
-<div className="flex-col w-[50%] gap-5 h-full flex justify-center items-start relative ">
+<div className="flex-col w-[50%] mobile:w-full gap-5 h-full flex justify-center items-start relative ">
     <div className="relative flex  items-center w-full">
     <input 
-          className="z-20 peer bg-transparent focus: outline-none w-full h-10 focus:text-[3rem] text-[3rem] font-annie focus:text-textBlackish focus:font-annie relative"
+          className="z-20 peer bg-transparent  focus:outline-none w-full h-10 focus:text-[3rem] text-[3rem] font-annie focus:text-textBlackish focus:font-annie relative"
           type="text"
           value= {inputValue}
           onChange={ChangeValue}
           placeholder= ''
           />
-          <span className={`text-[3rem] z-10 font-annie text-textBlackish absolute peer-focus:hidden" ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
+          <span className={`text-[3rem] z-10 font-annie text-textBlackish absolute peer-focus:hidden mobile:left-5 ${inputValue || document.activeElement === document.querySelector('input') ? 'hidden' : ''}`}>Title</span>
     </div>
          
           <button 
-          className="pt-1 pb-1 pl-7 pr-7 bg-customBrown tablet:pl-5 tablet:pr-5 tablet:pt-0.5 tablet:pb-0.5 tablet:text-[14px] text-white rounded-2xl font-annie text-[1rem]"
+          className="pt-1 pb-1 pl-7 pr-7 bg-customBrown mobile:relative mobile:left-5 tablet:pl-5 tablet:pr-5 tablet:pt-0.5 tablet:pb-0.5 tablet:text-[14px] text-white rounded-2xl font-annie text-[1rem]"
           onClick={ChangeStatus}>{status}</button>
           <textarea
-          className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
+          className="w-full h-full mobile:pl-5 resize-none placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
           onChange={TextAreaChangeValue}
           placeholder= 'How about telling him about your day?'
           />
         </div>
 </div>
+<div className="flex gap-3 relative top-[6rem] left-8 desktop:hidden tablet:hidden">
+    <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl">Cancel</button>
+  
+   <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
 
+    </div>
 
         
         </div>
+      
         </>
     )
 }
