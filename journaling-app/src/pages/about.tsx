@@ -7,7 +7,7 @@ export default function About(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+        />
          <h1>This is About</h1>
         </>
     )

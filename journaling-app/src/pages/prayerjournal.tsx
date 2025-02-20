@@ -79,7 +79,7 @@ export default function PrayerJournal(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+         />
 
 <div>
         <div className="h-full">

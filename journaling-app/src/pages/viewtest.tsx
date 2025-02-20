@@ -49,7 +49,7 @@ const ViewTest = () => {
      Journal='Journal'
      Community = 'Community'
      About = 'About'
-     SignIn = 'Sign-in' />
+     />
      <div className="relative top-[3rem]   w-full flex justify-center ">
        <div className="w-[60%] pt-10  bg-transparent mobile:w-[95%] mobile:h-[90vh]">
        <h3 className="text-5xl mt-5  font-bold text-[#554B35] font-annie ">{test.title}</h3>

@@ -7,7 +7,7 @@ export default function Answered(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+        />
          <h1>This is Gratitude Journal</h1>
 
         </>

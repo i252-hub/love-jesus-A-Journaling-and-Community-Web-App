@@ -82,7 +82,7 @@ export default function Blessings(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+        />
       
       <div className="w-full h-[3rem] bg-transparent relative top-[3rem] flex items-center">
         <div className="w-[70%] h-full mobile:w-[45%]">

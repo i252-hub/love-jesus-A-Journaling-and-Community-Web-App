@@ -70,7 +70,7 @@ export default function GratitudeJournal(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+         />
 
 <div>
         <div className="h-full">

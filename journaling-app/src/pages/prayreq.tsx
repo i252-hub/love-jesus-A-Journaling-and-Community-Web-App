@@ -122,7 +122,7 @@ export default function PrayerReq(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+         />
         
         <StorageTwo<{ text: string; username: string }>
   storageKey="prayer_requests"

@@ -253,7 +253,7 @@ useEffect(() => {
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+         />
 
 <div>
 

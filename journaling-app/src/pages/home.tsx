@@ -9,7 +9,7 @@ export default function Home(){
         Journal='Journal'
         Community = 'Community'
         About = 'About'
-        SignIn = 'Sign-in' />
+         />
         </div>
         
         <h1 className="relative top-[8rem]">hello?</h1>

@@ -71,7 +71,7 @@ export default function Testimonial(){
        Journal='Journal'
        Community = 'Community'
        About = 'About'
-       SignIn = 'Sign-in' />
+        />
 
 <div className="relative top-[3rem] h-full w-full">
 <div className="relative w-full font-belle flex justify-center items-center text-white text-[2rem] pt-5">Testimony</div>
