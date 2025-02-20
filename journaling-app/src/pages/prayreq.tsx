@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar"
 import StorageTwo from "../components/StorageTwo";
-import { PlusCircleIcon} from '@heroicons/react/24/solid';
+import { PlusCircleIcon, XMarkIcon} from '@heroicons/react/24/solid';
 import { useEffect, useState } from "react";
 
 
@@ -104,6 +104,14 @@ export default function PrayerReq(){
     });
   };
   
+  function deleteNote(index: number) {
+    const updatedNotes = note.filter((_, i) => i !== index);
+    setNote(updatedNotes);
+    localStorage.setItem("prayer_requests", JSON.stringify(updatedNotes));
+    setAddReq(false);
+    setEditIndex(null);
+  }
+  
 
 
     return (
@@ -129,21 +137,21 @@ export default function PrayerReq(){
         <div className="relative top-[3rem] flex flex-col items-center h-full"
         > 
           <div className="w-full  text-[2rem] font-belle flex justify-center pt-8 pb-1 text-white">Daily Prayer Wall</div>
-          <div className="w-[70%] grid grid-rows-8 h-[70%]">
+          <div className="w-[70%] mobile:w-full grid grid-rows-8 h-[70%]">
 
           {
           displayedNotes.map((notes, index) => (
                 <div
                   key={index}
                   onClick={() => index !== null && editNote(index)}
-                  className={`grid grid-cols-2 items-center 
+                  className={`grid grid-cols-2 items-center h-auto
                     ${index % 2 === 0 ? 'bg-[#554B35] bg-opacity-50' : 'bg-[#BCA983]'}`}
                 > 
-                <div className="flex flex-col ">
+                <div className="flex flex-col h-auto ">
                   
                   <div className="text-white font-belle h-full relative top-1 ml-3"> {notes.username}</div>
                 
-                  <div className="h-full text-white font-annie ml-3">  { notes.text} </div>
+                  <div className="h-full text-white font-annie ml-3 break">  { notes.text} </div>
                 </div>
                 <div className="flex justify-end items-center bg-transparent w-full h-full">
                   <div className="bg-[#554B35] bg-opacity-60 pl-5 pr-5 pt-1 pb-1 mr-3 rounded-2xl font-annie text-white text-[14px]"> I PRAYED FOR YOU</div>
@@ -166,8 +174,14 @@ export default function PrayerReq(){
           <div className= 'fixed inset-0 backdrop-blur-sm  bg-opacity-50 z-40'></div>
 
           <div className="h-[60%] w-[30%] z-50 mobile:h-screen mobile:top-0 mobile:w-full mobile:left-0  bg-customYellow  shadow-md absolute top-[10%] left-[37%] pb-2" >
+          <div className="flex justify-end items-center">
+          <XMarkIcon 
+           onClick={()=> setAddReq(false)}
+           className="h-6 w-6 mr-1 relative top-[2px] fill-customBrown cursor-pointer"/> 
+          </div>
+        
           <textarea 
-             className="w-full h-[90%] text-[1rem] font-annie resize-none overflow-hidden bg-transparent  focus:outline-none focus:text-customBrown text-customBrown pl-2 text-stroke-2 focus:text-stroke-2"
+             className="w-full h-[85%] text-[1rem] font-annie resize-none overflow-hidden bg-transparent  focus:outline-none focus:text-customBrown text-customBrown pl-2 text-stroke-2 focus:text-stroke-2"
             maxLength={840}
              rows={2}
              placeholder="Present your requests"
@@ -176,7 +190,7 @@ export default function PrayerReq(){
              value={currentNote.text}></textarea>
              <div className="flex justify-end gap-2 mr-3 mobile:relative mobile:bottom-[2rem]">
              <button className="p-1 pl-5 pr-5 rounded-2xl bg-customBrown text-white font-annie"
-             onClick={() => setAddReq(false)}>Cancel</button>
+             onClick={() => editIndex !== null && deleteNote(editIndex)}>Delete</button>
              <button 
              onClick={Publish}
              className="p-1 pl-5 pr-5 rounded-2xl bg-customBrown text-white font-annie">Publish</button>
