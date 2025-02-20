@@ -1,24 +1,21 @@
 import { useState } from "react";
 import { Bars3Icon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
-import Modal from "./Modal";
 import { EnvelopeIcon} from '@heroicons/react/24/solid';
-import Sign from "./Signin";
+import { useAuth } from "./UseAuth";
 
 type NavbarProps = {
 Journal: string
 Community: string
 About: string
-SignIn: string
 
 }
 
-const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
+const Navbar: React.FC<NavbarProps>= ({Journal, Community, About}) => {
+    const { user } = useAuth();
     const [open, setOpen] = useState(false);
     const [expand, setExpand] = useState(false);
-    const [ismodal, setIsModal] = useState(false);
 
-    const toggleModal = () => setIsModal((prev) => !prev)
 
 
 
@@ -40,7 +37,16 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
                     <li className="font-annie" onMouseEnter={Expand}>{Community}</li>
                     <li className="font-annie" onMouseEnter={Expand} ><Link to="/about">{About}</Link></li>
                 </ul>
-                <li className="font-annie mr-5 cursor-pointer" onClick={toggleModal} >{SignIn}</li>
+                {user ? (
+                   <div className="w-8 h-8 rounded-2xl bg-customYellow border-2 border-[#554B35] border-opacity-80 mr-3">
+                  <img src={user.profilePic} alt="Profile" className="h-full w-full" />
+                   </div>
+                ) : (
+                <Link to="/signin">
+                <li className="font-annie mr-5 cursor-pointer" >Sign in</li>
+                </Link>
+                  )}
+                
             </ul>
 
         {expand && (
@@ -61,17 +67,13 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About, SignIn}) => {
            
 
             <div className="w-full flex items-center justify-between mr-2 desktop:hidden tablet:hidden">
-            <div className="font-belle ml-3 text-white text-[1.2rem]">Love, Jesus</div>
+            <div className="font-belle relative top-1 ml-3 text-white text-[1.2rem]">Love, Jesus</div>
             <button onClick={Open}><Bars3Icon className="text-white bg-transparent w-8 h-8"/></button>
             </div>
             
         </nav>
 
-        {ismodal && (
-                    <Modal  isOpen= {ismodal} onClose={toggleModal}>
-                  <Sign />
-                    </Modal>
-                )}
+      
 
         {open && (
                 <>
