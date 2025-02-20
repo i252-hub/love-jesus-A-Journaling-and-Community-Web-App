@@ -8,6 +8,9 @@ import About from "./pages/about";
 import Storage from "./components/Storage";
 import PrayerJournal from "./pages/prayerjournal";
 import InfiniteCanvas from "./components/InfiniteCanvas";
+import ViewTest from "./pages/ViewTest";
+import Sign from "./components/Signin";
+import SignUp from "./components/Signup";
 
 const routes = [
     {
@@ -57,7 +60,19 @@ const routes = [
     {
         path: "infinitecanvas",
         element: <InfiniteCanvas width={window.innerWidth} height={window.innerHeight}/>
-    }
+    },
+    {
+        path: "viewtest",
+        element: <ViewTest/>
+    },
+    {
+        path: "signin",
+        element: <Sign/>
+    },
+    {
+        path: "signup",
+        element: <SignUp/>
+    },
    
  
 
