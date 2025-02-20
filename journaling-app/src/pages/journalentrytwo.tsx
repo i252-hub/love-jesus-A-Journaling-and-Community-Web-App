@@ -88,9 +88,9 @@ const HandleSave = () => {
         <>
         <div className="bg-customYellow h-screen ">
         <nav className="w-full flex justify-between items-center absolute">
-<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 tablet:text-[2rem]">Love, Jesus</div>
+<div className="text-[3rem] font-belle relative top-2.5 text-textBlackish ml-5 tablet:text-[2rem] mobile:text-[1.5rem]">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
-    <div className="flex gap-3 ">
+    <div className="flex gap-3 mobile:hidden">
     <button 
     onClick={()=> navigate("/gratitude")}
     className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl"
@@ -99,11 +99,11 @@ const HandleSave = () => {
    <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
 
     </div>
-    <div className="w-8 h-8 tablet:w-7 tablet:h-7 relative tablet:bottom-[2px] bg-slate-300 rounded-2xl"></div>
+    <div className="w-8 h-8 mobile:w-7 mobile:h-7 tablet:w-7 tablet:h-7 relative tablet:bottom-[2px] bg-slate-300 rounded-2xl"></div>
 </div>
         </nav>
 <div className="w-full h-[80%] relative top-[5rem] flex justify-center items-center ">
-<div className="flex-col w-[50%] gap-5 h-full flex justify-center items-start relative ">
+<div className="flex-col w-[50%] mobile:w-[90%] gap-5 h-full flex justify-center items-start relative ">
     <div className="relative flex  items-center w-full">
     <input 
           className="z-20 peer bg-transparent focus: outline-none w-full h-10 focus:text-[3rem] text-[3rem] font-annie focus:text-textBlackish focus:font-annie relative"
@@ -120,11 +120,20 @@ const HandleSave = () => {
 
        </div>
           <textarea
-          className="w-full h-full placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
+          className="w-full h-full resize-none placeholder:text-textBlackish placeholder:font-annie focus:text-textBlackish focus:font-annie bg-transparent focus:outline-none"
           value= {textareaValue}
           onChange={TextAreaChangeValue}
           />
         </div>
+        <div className="flex gap-3  relative top-[50%] left-10 desktop:hidden tablet:hidden">
+    <button 
+    onClick={()=> navigate("/gratitude")}
+    className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[8rem] tablet:right-[7rem]  rounded-2xl"
+    >Cancel</button>
+  
+   <button className="text-white font-annie absolute bg-customBrown pt-1 pb-1 pr-6 pl-6 tablet:pt-0.5 tablet:pb-0.5 tablet:pl-5 tablet:pr-5 tablet:text-[14px] right-[3rem]  rounded-2xl" onClick={HandleSave}>Save</button>
+
+    </div>
 </div>
 
 
