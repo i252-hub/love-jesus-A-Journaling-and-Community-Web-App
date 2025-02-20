@@ -1,3 +1,5 @@
+{/* 
+
 import ReactDOM from 'react-dom';
 import { XMarkIcon } from '@heroicons/react/24/solid'
 
@@ -30,3 +32,5 @@ return  ReactDOM.createPortal(
 }
 
 export default Modal;
+
+*/}
