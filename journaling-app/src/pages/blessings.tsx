@@ -77,7 +77,7 @@ export default function Blessings(){
 
     return (
         <>
-        <div className="bg-customGradient scrollbar-hidden bg-cover bg-no-repeat min-h-screen relative overflow-auto">
+        <div className="bg-customGradient scrollbar-hidden bg-cover bg-no-repeat min-h-screen relative mobile:flex mobile:justify-center  overflow-auto">
           <Navbar
         Journal='Journal'
         Community = 'Community'
@@ -102,11 +102,11 @@ export default function Blessings(){
   </div>
 
   )}
-<div className="absolute flex flex-wrap top-[3rem]">
+<div className="absolute flex flex-wrap mobile:flex-nowrap mobile:flex-col mobile:justify-center top-[6rem]">
  
         {display.length > 0 &&
             display.map((note, index) => (
- <div key={index} className="relative  w-[20rem]  ml-[3rem] mt-[3rem] bg-customYellow rounded-3xl shadow-custom">
+ <div key={index} className="relative  w-[20rem] mobile:ml-0  ml-[3rem] mt-[3rem] bg-customYellow rounded-3xl shadow-custom">
  <div className="w-[90%]  flex justify-between items-center relative top-6 ml-3 pb-3">
    <div className="flex gap-2 items-center justify-center ">
    <div className="bg-gray-300 h-6 w-6 rounded-full"></div>
@@ -145,9 +145,9 @@ export default function Blessings(){
            
           ))}
 </div>
-         <div className="w-full flex justify-end items-end absolute ">
+         <div className="w-full flex justify-end items-end absolute">
          {addnote &&(
-          <div className="w-[25rem] h-[22.3rem] mobile:h-screen mobile:top-0 mobile:right-0 mobile:w-full   absolute top-[12.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5">
+          <div className="w-[25rem] h-[22.3rem] mobile:h-[100vh] mobile:pb-0 mobile:top-[16.5rem] mobile:right-0 mobile:w-full   absolute top-[12.5rem]  right-[5.5rem] bg-customYellow border-2 border-customBrown pb-5 mobile:z-40 ">
            <div className="flex justify-end">
            
            <XMarkIcon 
@@ -173,7 +173,7 @@ export default function Blessings(){
              placeholder="Tell us about the gift :)"
              onChange={Display}>Tell us about it :)</textarea>
             
-            <div className="flex justify-end items-center w-full">
+            <div className="flex justify-end items-center w-full relative top-[4rem]">
             <button 
             onClick={Publish}
             className="bg-customBrown text-white font-annie pl-5 pr-5 h-[2rem] mr-2 rounded-2xl">Publish</button>
