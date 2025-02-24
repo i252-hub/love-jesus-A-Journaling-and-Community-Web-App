@@ -8,7 +8,7 @@ import About from "./pages/about";
 import Storage from "./components/Storage";
 import PrayerJournal from "./pages/prayerjournal";
 import InfiniteCanvas from "./components/InfiniteCanvas";
-import ViewTest from "./pages/ViewTest";
+import ViewTest from "./pages/viewtest";
 import Sign from "./components/Signin";
 import SignUp from "./components/Signup";
 
