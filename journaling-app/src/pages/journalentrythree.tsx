@@ -80,11 +80,11 @@ const HandleSave = () => {
         <>
         <div className="bg-customYellow h-screen  overflow-hidden">
         <nav className="w-full flex justify-between items-center absolute">
-<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5">Love, Jesus</div>
+<div className="text-[3rem] font-belle relative top-2 text-textBlackish ml-5 mobile:text-[1.5rem]">Love, Jesus</div>
 <div className="flex gap-[3rem] mr-5 relative top-2">
     <div className="flex gap-3 ">
     <button 
-    onClick={()=> navigate("/gratitude")}
+    onClick={()=> navigate("/truth")}
     className="text-white font-annie bg-customBrown pt-1 pb-1 pr-6 pl-6 rounded-2xl"
     >Cancel</button>
   
@@ -95,7 +95,7 @@ const HandleSave = () => {
         </nav>
    
          
-       <div className="w-full h-full  border-t-[2px] border-t-customBrown grid grid-cols-[1fr_1fr] text-white font-[800]  font-annie  relative top-[5rem] ">
+       <div className="w-full h-full  border-t-[2px] border-t-customBrown grid grid-cols-[1fr_1fr] text-white font-[800]  font-annie  relative top-[5rem] mobile:top-[3rem] ">
         <div className="bg-customYellow grid-rows-2 h-full p-2">
             <h1 className="text-customBrown flex justify-center items-center text-[3rem]">Lies</h1>
             <textarea
