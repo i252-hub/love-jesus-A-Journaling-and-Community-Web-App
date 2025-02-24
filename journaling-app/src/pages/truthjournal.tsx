@@ -32,6 +32,8 @@ export default function TruthJournal(){
   const [canvasId, setCanvasId] = useState(1);
   const [previousCanvasIds, setPreviousCanvasIds] = useState<number[]>([]);
   const location = useLocation();
+  const noteWidth = window.innerWidth < 768 ? 120 : 200; 
+  const noteHeight = window.innerWidth < 768 ? 40 : 10;
   const entries: Entry[] = useMemo(() => {
     return location.state?.entries || [];
   }, [location.state?.entries]);  
@@ -212,23 +214,6 @@ const handleDragStart = (e: React.DragEvent<HTMLDivElement | HTMLInputElement>, 
 };
 
 
-useEffect(() => {
-  localStorage.clear(); 
-
-  setIcons([
-    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
-    { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
-  ]);
-
-  setCanvasId(1);
-  setPreviousCanvasIds([1]);
-
-  localStorage.setItem("canvas-ids", JSON.stringify([1]));
-  localStorage.setItem("icons-1", JSON.stringify([
-    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
-    { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
-  ]));
-}, []); 
 
 
 const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
@@ -256,7 +241,7 @@ useEffect(() => {
 useEffect(() => {
   if (entries.length > 0) {
     setIcons((prevIcons) => {
-      const updatedIcons = entries.map((entry, index) => {
+      const updatedIcons = entries.map((entry) => {
         const generateRandomPosition = () => {
           const canvasWidth = window.innerWidth;
           const canvasHeight = window.innerHeight;
@@ -280,7 +265,7 @@ useEffect(() => {
         }
 
         return {
-          id: `entry-${entry.id || index}`,
+          id: `entry-${crypto.randomUUID()}`,
           type: "note",
           x: position.x,
           y: position.y,
@@ -313,15 +298,19 @@ useEffect(() => {
 
 
 
-         <div  className="bg-customYellow relative top-[3rem] w-full" >
-         <TrashIcon 
-          onDrop={handleTrashDrop}
-          onDragOver={(e) => e.preventDefault()}
-         id="trash-icon" className="absolute w-[2rem] h-[3rem] right-[83.5%] z-10" fill="#816F51"/>
+         <div  className="bg-customYellow relative h-screen w-screen top-[3rem]" >
+        
 
+        
+       
+        
+        <div className="w-full  h-[3em]  flex items-center justify-between pt-5 relative z-30 right-5 ">
+      
+        <div className="relative bottom-[5rem] h-full w-screen pointer-events-none">
         {showCanvas &&
         (
               <InfiniteCanvas
+              
               width={window.innerWidth}
               height={window.innerHeight}
               onMouseDown={handleMouseDown}
@@ -330,13 +319,28 @@ useEffect(() => {
               onWheel={handleWheel}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-/>
+              
+/>              
         )}
-        
+        </div>
+        <div className="absolute w-full mobile:top-[34rem]">
        
-        
-        <div className="w-full  h-[3em]  flex items-center justify-between pt-5 relative bottom-[40em]">
-         
+          <div className="relative w-full h-[3rem]">
+          <div className="mr-3 flex gap-3 absolute top-[1rem] left-[90%]">
+          {canvasId >= 2 && (
+         <ArrowUturnLeftIcon onClick={handleBackClick} className="w-8 h-8 fill-customBrown relative left-[3rem]"/>
+          )}
+            <Link to="/journalentrythree">
+            <PlusCircleIcon className="w-9 h-9 fill-customBrown fixed left-[95%]"/>
+            </Link>
+           
+            </div>
+          <TrashIcon 
+          onDrop={handleTrashDrop}
+          onDragOver={(e) => e.preventDefault()}
+         id="trash-icon" className="absolute w-[2rem] top-[8px] tablet:top-[8px] h-[3rem] left-[10.5rem] z-10" fill="#816F51"/>
+          
+       
          {icons.map((icon) => (
           <div key={icon.id}
            className="w-[15%] flex items-center justify-center gap-2 object-contain ">
@@ -350,7 +354,9 @@ useEffect(() => {
                       value={icon.text}
                       onChange={(e) => handleInputChange(e, icon.id)}
                       autoFocus
-                      style={{ left: `${icon.x}px`, top: `${icon.y}px` }}
+                      style={{left: `${Math.max(0, Math.min(icon.x, window.innerWidth - noteWidth))}px`,
+                      top: `${Math.max(0, Math.min(icon.y, window.innerHeight - noteHeight))}px`,
+                      }}
                       className="absolute cursor-default font-annie pl-3 placeholder-white  text-[12px] text-white border-none bg-customBrown w-[18rem] h-[3rem]"
                       placeholder="Enter text"
                     />
@@ -398,19 +404,13 @@ useEffect(() => {
                              </div> 
 
                   ))}
-
-
-                  
+</div>
+</div>
+           
                   
           
                     
-         <div className="mr-3 flex gap-3">
-         <ArrowUturnLeftIcon onClick={handleBackClick} className="w-8 h-8 fill-customBrown"/>
-            <Link to="/journalentrythree">
-            <PlusCircleIcon className="w-9 h-9 fill-customBrown"/>
-            </Link>
-           
-            </div>
+   
             </div>
             
        
