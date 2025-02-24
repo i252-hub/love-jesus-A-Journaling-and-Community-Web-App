@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar"
-import { PlusCircleIcon, ArrowUturnLeftIcon} from '@heroicons/react/24/solid';
+import { PlusCircleIcon, ArrowUturnLeftIcon, WindowIcon, TrashIcon} from '@heroicons/react/24/solid';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import {Link, useLocation} from "react-router-dom";
 import InfiniteCanvas from "../components/InfiniteCanvas";
 import { useState, useEffect, useMemo} from "react";
@@ -29,7 +30,6 @@ export default function TruthJournal(){
 
   const [showCanvas, setShowCanvas] = useState(true);
   const [canvasId, setCanvasId] = useState(1);
-  const [currentCanvasIndex, setCurrentCanvasIndex] = useState(0);
   const [previousCanvasIds, setPreviousCanvasIds] = useState<number[]>([]);
   const location = useLocation();
   const entries: Entry[] = useMemo(() => {
@@ -42,18 +42,41 @@ export default function TruthJournal(){
     if (savedIcons) {
       setIcons(JSON.parse(savedIcons));
     } else {
-      setIcons([]); 
+      setIcons([
+        { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+        { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
+      ]);
     }
   };
+  
+  useEffect(() => {
+    const savedIcons = localStorage.getItem(`icons-${canvasId}`);
+    if (!savedIcons) {
+      const defaultIcons = [
+        { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+        { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
+      ];
+      
+      setIcons(defaultIcons);
+      localStorage.setItem(`icons-${canvasId}`, JSON.stringify(defaultIcons)); 
+    } else {
+      setIcons(JSON.parse(savedIcons));
+    }
+  }, [canvasId]); 
+  
 
   useEffect(() => {
     const savedCanvasIds = localStorage.getItem("canvas-ids");
     if (savedCanvasIds) {
       const parsedIds = JSON.parse(savedCanvasIds);
       setPreviousCanvasIds(parsedIds);
-      setCurrentCanvasIndex(parsedIds.length - 1);
+      setCanvasId(parsedIds[parsedIds.length - 1] || 1);
+    } else {
+      setPreviousCanvasIds([1]);
+      setCanvasId(1);
     }
   }, []);
+  
 
   useEffect(() => {
     if (canvasId) {
@@ -62,66 +85,42 @@ export default function TruthJournal(){
   }, [canvasId]);
   
   const handleCreateNewCanvas = () => {
-    setCanvasId((prevId) => {
-      const newCanvasId = prevId + 1;  
-  
-      setPreviousCanvasIds((prevCanvasIds) => {
-        const updatedCanvasIds = [...prevCanvasIds, prevId, newCanvasId];  
-        localStorage.setItem("canvas-ids", JSON.stringify(updatedCanvasIds));
-        setCurrentCanvasIndex(updatedCanvasIds.length - 1);
-  
-        const currentIcons = icons.filter(icon => !icon.dropped); 
-      
-        localStorage.setItem(`icons-${newCanvasId}`, JSON.stringify(currentIcons));
-        return updatedCanvasIds;
-      });
-  
-      return newCanvasId;  
-    });
-  
-    setShowCanvas(true);
+  setCanvasId((prevId) => {
+    const newCanvasId = prevId + 1;
     
-  };
-  
-  
+    setPreviousCanvasIds((prev) => {
+      const updatedIds = [...prev, newCanvasId];
+      localStorage.setItem("canvas-ids", JSON.stringify(updatedIds));
+      return updatedIds;
+    });
 
-const handleBackClick = () => {
-  if (currentCanvasIndex > 0) {
-    const previousIndex = currentCanvasIndex - 1;
-    const previousCanvasId = previousCanvasIds[previousIndex];
+    setIcons([
+      { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+      { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
+    ]);
 
+    return newCanvasId;
+  });
 
-    setCurrentCanvasIndex(previousIndex);
-    setCanvasId(previousCanvasId);
-
-
-    const savedIcons = localStorage.getItem(`icons-${previousCanvasId}`);
-    if (savedIcons) {
-      setIcons(JSON.parse(savedIcons));
-    } else {
-      console.warn(`No saved icons for canvas ID: ${previousCanvasId}`);
-      setIcons([]); 
-    }
-  } else {
-    console.warn("No previous canvas available.");
-  }
+  setShowCanvas(true);
 };
 
-
-  useEffect(() => {
-    console.log("Canvas ID:", canvasId);
-    console.log("Current Index:", currentCanvasIndex);
-    console.log("Previous Canvas IDs:", previousCanvasIds);
-  }, [canvasId, currentCanvasIndex, previousCanvasIds]);
   
+const handleBackClick = () => {
+  setPreviousCanvasIds((prev) => {
+    if (prev.length > 1) {
+      const updatedIds = prev.slice(0, -1);
+      const prevCanvasId = updatedIds[updatedIds.length - 1] || 1;
+        console.log(previousCanvasIds)
+      setCanvasId(prevCanvasId);
+      localStorage.setItem("canvas-ids", JSON.stringify(updatedIds));
+      
+      return updatedIds;
+    }
+    return prev; 
+  });
+};
 
-
-
-  
-
-
-  
-  
 
   const handleMouseDown = (e: React.MouseEvent) => {
     console.log("Mouse down", e);
@@ -145,46 +144,101 @@ const handleDragOver = (e: React.DragEvent<HTMLCanvasElement>) => {
   e.preventDefault(); 
 };
 
+const handleTrashDrop = (e: React.DragEvent<SVGSVGElement>) => {
+  e.preventDefault();
+
+  const droppedIconId = e.dataTransfer.getData("icon-id");
+  console.log("Dropped on trash!", droppedIconId);
+
+  if (droppedIconId) {
+    setIcons((prevIcons) => {
+      const updatedIcons = prevIcons.filter((icon) => icon.id !== droppedIconId);
+      localStorage.setItem(`icons-${canvasId}`, JSON.stringify(updatedIcons));
+      return updatedIcons;
+    });
+  }
+};
+
+
+
+  
 const handleDrop = (e: React.DragEvent<HTMLCanvasElement>) => {
   e.preventDefault();
-  const imageType = e.dataTransfer.getData("image-type");
+
+  const droppedIconId = e.dataTransfer.getData("icon-id");
+ 
+
+
+  
+
   const canvasBounds = e.currentTarget.getBoundingClientRect();
   const mouseX = e.clientX - canvasBounds.left;
   const mouseY = e.clientY - canvasBounds.top;
+  const imageType = e.dataTransfer.getData("image-type");
 
   if (imageType) {
     const newIcon = {
-      id: `${imageType}-${Date.now()}`, 
+      id: `${imageType}-${Date.now()}`,
       type: imageType,
       x: mouseX,
       y: mouseY,
-      text: "", 
+      text: "",
       showInput: imageType === "note",
-      isLabel: imageType === "delicious" ,
-      showIcon: imageType !== "note", 
-      dropped: true
-       };
-   
-       const updatedIcons = [...icons, newIcon];
-    setIcons(updatedIcons);
-    localStorage.setItem(`icons-${canvasId}`, JSON.stringify(updatedIcons));
+      isLabel: imageType === "delicious",
+      showIcon: imageType !== "note",
+      dropped: true,
+    };
 
+    setIcons((prevIcons) => [...prevIcons, newIcon]);
+    localStorage.setItem(`icons-${canvasId}`, JSON.stringify([...icons, newIcon]));
+  } else if (droppedIconId) {
+    setIcons((prevIcons) =>
+      prevIcons.map((icon) =>
+        icon.id === droppedIconId ? { ...icon, x: mouseX, y: mouseY } : icon
+      )
+    );
   }
-
-  
-}
-
-const handleDragStart = (e: React.DragEvent<HTMLImageElement>, imageType: string) => {
-  e.dataTransfer.setData("image-type", imageType); 
-  console.log(`Drag started with type: ${imageType}`);  
 };
 
+
+const handleDragStart = (e: React.DragEvent<HTMLDivElement | HTMLInputElement>, icon: IconData) => {
+  if (icon.dropped) {
+    console.log("Dragging existing icon:", icon.id);
+    e.dataTransfer.setData("icon-id", icon.id);
+  } else {
+    console.log("Dragging new icon type:", icon.type);
+    e.dataTransfer.setData("image-type", icon.type);
+  }
+};
+
+
+useEffect(() => {
+  localStorage.clear(); 
+
+  setIcons([
+    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+    { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
+  ]);
+
+  setCanvasId(1);
+  setPreviousCanvasIds([1]);
+
+  localStorage.setItem("canvas-ids", JSON.stringify([1]));
+  localStorage.setItem("icons-1", JSON.stringify([
+    { id: "note", type: "note", x: 50, y: 12, text: "", showInput: false, showIcon: true },
+    { id: "delicious", type: "delicious", x: 110, y: 10, text: "", showInput: false, showIcon: true },
+  ]));
+}, []); 
+
+
 const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-  setIcons((prevIcons) =>
-    prevIcons.map((icon) =>
+  setIcons((prevIcons) => {
+    const updatedIcons = prevIcons.map((icon) =>
       icon.id === id ? { ...icon, text: e.target.value } : icon
-    )
-  );
+    );
+    localStorage.setItem(`icons-${canvasId}`, JSON.stringify(updatedIcons));
+    return updatedIcons;
+  });
 };
 
 
@@ -260,6 +314,10 @@ useEffect(() => {
 
 
          <div  className="bg-customYellow relative top-[3rem] w-full" >
+         <TrashIcon 
+          onDrop={handleTrashDrop}
+          onDragOver={(e) => e.preventDefault()}
+         id="trash-icon" className="absolute w-[2rem] h-[3rem] right-[83.5%] z-10" fill="#816F51"/>
 
         {showCanvas &&
         (
@@ -280,16 +338,20 @@ useEffect(() => {
         <div className="w-full  h-[3em]  flex items-center justify-between pt-5 relative bottom-[40em]">
          
          {icons.map((icon) => (
-          <div key={icon.id} className="w-[15%] flex items-center justify-center gap-2 object-contain ">
+          <div key={icon.id}
+           className="w-[15%] flex items-center justify-center gap-2 object-contain ">
                    
                    {icon.showInput ? (
                     <input
+                    
+                    draggable="true"
+                       onDragStart={(e) => handleDragStart(e, icon)}
                       type="text"
                       value={icon.text}
                       onChange={(e) => handleInputChange(e, icon.id)}
                       autoFocus
                       style={{ left: `${icon.x}px`, top: `${icon.y}px` }}
-                      className="absolute font-annie pl-3 placeholder-white  text-[12px] text-white border-none bg-customBrown w-[18rem] h-[3rem]"
+                      className="absolute cursor-default font-annie pl-3 placeholder-white  text-[12px] text-white border-none bg-customBrown w-[18rem] h-[3rem]"
                       placeholder="Enter text"
                     />
                   ) : icon.isLabel  && (
@@ -310,28 +372,25 @@ useEffect(() => {
                   )} 
                   
                    {icon.showIcon && (
-                    <img
+                    <div
+                    
                     onClick={handleCreateNewCanvas}
-                      draggable="true"
-                      onDragStart={(e) => handleDragStart(e, icon.type)
-                      }
-                      src={
-                        icon.type === "note"
-                          ? "https://img.icons8.com/pastel-glyph/64/816f51/note.png"
-                          : icon.type === "delicious"
-                          ? "https://img.icons8.com/ios-filled/80/816f51/delicious.png"
-                          : ""
-                      }
-                      alt={icon.type}
-                      className="w-[2.5rem] h-[2.5rem] object-contain border-box"
-                      style={{
-                        position: "absolute",
-                        left: `${icon.x}px`,
-                        top: `${icon.y}px`,
-                        width: "2rem",
-                        height: "3rem",
-                      }}
-                    />
+                    draggable="true"
+                    onDragStart={(e) => handleDragStart(e, icon)}
+                    className="w-[2.5rem] h-[2.5rem] object-contain border-box absolute"
+                    style={{
+                      left: `${icon.x}px`,
+                      top: `${icon.y}px`,
+                      width: "2rem",
+                      height: "3rem",
+                    }}
+                  >
+                    {icon.type === "note" ? (
+                     <StickyNote2Icon sx={{ width: "2rem", height: "3rem", color: "#816F51" }} className="w-[2rem] h-[3rem]"  />
+                    ) : icon.type === "delicious" ? (
+                      <WindowIcon className="w-[2rem] h-[3rem]" fill="#816F51" />
+                    ) : null}
+                  </div>
        
           )}
           
@@ -342,11 +401,7 @@ useEffect(() => {
 
 
                   
-
-                   <img 
-                      className="absolute w-[2.5rem] right-[83.5%]"
-                      src = "https://img.icons8.com/glyph-neue/64/816f51/trash.png"/>
-
+                  
           
                     
          <div className="mr-3 flex gap-3">
