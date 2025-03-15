@@ -31,11 +31,11 @@ const Navbar: React.FC<NavbarProps>= ({Journal, Community, About}) => {
         <>
         <nav className="bg-customBrown w-full  mobile:h-12 bg absolute z-50">
             <ul className="flex w-full justify-between items-center  text-white mobile:hidden">
-                <li className="font-belle ml-5 text-[2rem] relative top-1"><Link to="/">Love, Jesus</Link></li>
+                <li className="font-belle ml-5 text-[2rem] relative top-1 cursor-pointer"><Link to="/">Love, Jesus</Link></li>
                 <ul className="w-[50%] justify-center flex items-center gap-20 h-[3rem] relative right-[3rem]">
-                    <li className="font-annie" onMouseEnter={Expand}>{Journal}</li>
-                    <li className="font-annie" onMouseEnter={Expand}>{Community}</li>
-                    <li className="font-annie" onMouseEnter={Expand} ><Link to="/about">{About}</Link></li>
+                    <li className="font-annie cursor-pointer" onMouseEnter={Expand}>{Journal}</li>
+                    <li className="font-annie cursor-pointer" onMouseEnter={Expand}>{Community}</li>
+                    <li className="font-annie cursor-pointer" onMouseEnter={Expand} ><Link to="/about">{About}</Link></li>
                 </ul>
                 {user ? (
                    <div className="w-8 h-8 rounded-2xl bg-customYellow border-2 border-[#554B35] border-opacity-80 mr-3">

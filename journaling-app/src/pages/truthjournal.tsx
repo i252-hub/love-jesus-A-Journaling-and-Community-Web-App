@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar"
-import { PlusCircleIcon, ArrowUturnLeftIcon, WindowIcon, TrashIcon} from '@heroicons/react/24/solid';
+import { ArrowUturnLeftIcon, WindowIcon, TrashIcon} from '@heroicons/react/24/solid';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import {Link, useLocation} from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import InfiniteCanvas from "../components/InfiniteCanvas";
 import { useState, useEffect, useMemo} from "react";
 
@@ -330,9 +330,7 @@ useEffect(() => {
           {canvasId >= 2 && (
          <ArrowUturnLeftIcon onClick={handleBackClick} className="w-8 h-8 fill-customBrown relative left-[3rem]"/>
           )}
-            <Link to="/journalentrythree">
-            <PlusCircleIcon className="w-9 h-9 fill-customBrown fixed left-[95%]"/>
-            </Link>
+            
            
             </div>
           <TrashIcon 
